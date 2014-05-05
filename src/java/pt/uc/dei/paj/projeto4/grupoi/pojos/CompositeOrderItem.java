@@ -8,8 +8,6 @@ package pt.uc.dei.paj.projeto4.grupoi.pojos;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
-import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
-import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 
 /**
  *
@@ -20,34 +18,34 @@ public class CompositeOrderItem implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Column(name = "PRODUCTID")
-    private Product product;
+    private Long productId;
     @Column(name = "ORDERRECEIVEDID")
-    private OrderReceived orderReceived;
+    private Long orderReceivedId;
 
     public CompositeOrderItem() {
     }
 
-    public Product getProductId() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProductId(Product productId) {
-        this.product = productId;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
-    public OrderReceived getOrderReceivedId() {
-        return orderReceived;
+    public Long getOrderReceivedId() {
+        return orderReceivedId;
     }
 
-    public void setOrderReceivedId(OrderReceived orderReceivedId) {
-        this.orderReceived = orderReceivedId;
+    public void setOrderReceivedId(Long orderReceivedId) {
+        this.orderReceivedId = orderReceivedId;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.product);
-        hash = 97 * hash + Objects.hashCode(this.orderReceived);
+        hash = 97 * hash + Objects.hashCode(this.productId);
+        hash = 97 * hash + Objects.hashCode(this.orderReceivedId);
         return hash;
     }
 
@@ -60,10 +58,10 @@ public class CompositeOrderItem implements Serializable {
             return false;
         }
         final CompositeOrderItem other = (CompositeOrderItem) obj;
-        if (!Objects.equals(this.product, other.product)) {
+        if (!Objects.equals(this.productId, other.productId)) {
             return false;
         }
-        if (!Objects.equals(this.orderReceived, other.orderReceived)) {
+        if (!Objects.equals(this.orderReceivedId, other.orderReceivedId)) {
             return false;
         }
         return true;

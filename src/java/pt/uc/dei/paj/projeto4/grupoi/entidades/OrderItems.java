@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import pt.uc.dei.paj.projeto4.grupoi.pojos.CompositeOrderItem;
 
 /**
@@ -27,13 +26,10 @@ public class OrderItems implements Serializable {
     //VErificar situação com chave composta
     @Id
     @JoinColumn(name = "PRODUCTID")
-    @ManyToOne
-    private Product product;
-
+    private Long productId;
     @Id
     @JoinColumn(name = "ORDERRECEIVEDID")
-    @ManyToOne
-    private OrderReceived orderReceived;
+    private Long orderReceivedId;
 
     @Column(name = "QUANTITY", nullable = false)
     private int quantity;
@@ -65,20 +61,20 @@ public class OrderItems implements Serializable {
 //    public String toString() {
 //        return "pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems[ id=" + id + " ]";
 //    }
-    public Product getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
-    public OrderReceived getOrderReceived() {
-        return orderReceived;
+    public Long getOrderReceivedId() {
+        return orderReceivedId;
     }
 
-    public void setOrderReceived(OrderReceived orderReceived) {
-        this.orderReceived = orderReceived;
+    public void setOrderReceivedId(Long orderReceivedId) {
+        this.orderReceivedId = orderReceivedId;
     }
 
     public int getQuantity() {

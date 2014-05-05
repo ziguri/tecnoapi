@@ -6,12 +6,10 @@
 package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 /**
  *
@@ -20,8 +18,6 @@ import javax.persistence.OneToMany;
 @Entity
 public class OrderReceived implements Serializable {
 
-    @OneToMany(mappedBy = "orderReceived")
-    private List<OrderItems> orderItemss;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,14 +29,6 @@ public class OrderReceived implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<OrderItems> getOrderItemss() {
-        return orderItemss;
-    }
-
-    public void setOrderItemss(List<OrderItems> orderItemss) {
-        this.orderItemss = orderItemss;
     }
 
     @Override

@@ -7,13 +7,11 @@ package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
 import java.util.GregorianCalendar;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 /**
@@ -23,8 +21,6 @@ import javax.persistence.Temporal;
 @Entity
 public class Product implements Serializable {
 
-    @OneToMany(mappedBy = "product")
-    private List<OrderItems> orderItemss;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -54,14 +50,6 @@ public class Product implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<OrderItems> getOrderItemss() {
-        return orderItemss;
-    }
-
-    public void setOrderItemss(List<OrderItems> orderItemss) {
-        this.orderItemss = orderItemss;
     }
 
     public String getBrand() {
