@@ -6,6 +6,7 @@
 package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,10 +18,13 @@ import javax.persistence.Id;
  */
 @Entity
 public class Attributes implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "ATTRIBUTE_NAME", nullable = false)
+    private String attribute_name;
 
     public Long getId() {
         return id;
@@ -28,6 +32,14 @@ public class Attributes implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAttribute_name() {
+        return attribute_name;
+    }
+
+    public void setAttribute_name(String attribute_name) {
+        this.attribute_name = attribute_name;
     }
 
     @Override

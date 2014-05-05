@@ -6,17 +6,22 @@
 package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author Zueb LDA
  */
 @Entity
-public class Products implements Serializable {
+public class OrderReceived implements Serializable {
+
+    @OneToMany(mappedBy = "orderReceived")
+    private List<OrderItems> orderItemss;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,6 +35,14 @@ public class Products implements Serializable {
         this.id = id;
     }
 
+    public List<OrderItems> getOrderItemss() {
+        return orderItemss;
+    }
+
+    public void setOrderItemss(List<OrderItems> orderItemss) {
+        this.orderItemss = orderItemss;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -40,10 +53,10 @@ public class Products implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Products)) {
+        if (!(object instanceof OrderReceived)) {
             return false;
         }
-        Products other = (Products) object;
+        OrderReceived other = (OrderReceived) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -52,7 +65,7 @@ public class Products implements Serializable {
 
     @Override
     public String toString() {
-        return "pt.uc.dei.paj.projeto4.grupoi.entidades.Products[ id=" + id + " ]";
+        return "pt.uc.dei.paj.projeto4.grupoi.entidades.OrdersReceived[ id=" + id + " ]";
     }
 
 }
