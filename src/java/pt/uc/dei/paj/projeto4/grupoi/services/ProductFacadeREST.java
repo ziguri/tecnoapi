@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
@@ -61,30 +62,30 @@ public class ProductFacadeREST {
         return produtFacade.findAll();
     }
 
+//    @GET
+//    @Produces({"application/json"})
+//    public List<Product> findByDesignation() {
+//        return produtFacade.findAll();
+//    }
+//
+//    @GET
+//    @Produces({"application/json"})
+//    public List<Product> findByDescription() {
+//        return produtFacade.findAll();
+//    }
+//
     @GET
+    @Path("{category}")
     @Produces({"application/json"})
-    public List<Product> findByDesignation() {
-        return produtFacade.findAll();
+    public List<Product> findByCategory(@PathParam("category") String category) {
+        return produtFacade.findProductsByCategory(category);
     }
-
-    @GET
-    @Produces({"application/json"})
-    public List<Product> findByDescription() {
-        return produtFacade.findAll();
-    }
-
-    @GET
-    @Produces({"application/json"})
-    public List<Product> findByCategory() {
-        return produtFacade.findAll();
-    }
-
-    @GET
-    @Produces({"application/json"})
-    public List<Product> findStockByProduct() {
-        return produtFacade.findAll();
-    }
-
+//
+//    @GET
+//    @Produces({"application/json"})
+//    public List<Product> findStockByProduct() {
+//        return produtFacade.findAll();
+//    }
 //    @GET
 //    @Path("{from}/{to}")
 //    @Produces({"application/json"})
