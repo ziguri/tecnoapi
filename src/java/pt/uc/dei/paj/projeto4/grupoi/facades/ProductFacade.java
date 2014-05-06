@@ -5,9 +5,11 @@
  */
 package pt.uc.dei.paj.projeto4.grupoi.facades;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 
 /**
@@ -16,6 +18,7 @@ import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
  */
 @Stateless
 public class ProductFacade extends AbstractFacade<Product> {
+
     @PersistenceContext(unitName = "TecnoApiPU")
     private EntityManager em;
 
@@ -26,6 +29,14 @@ public class ProductFacade extends AbstractFacade<Product> {
 
     public ProductFacade() {
         super(Product.class);
+    }
+
+    public List<Product> findProductsByCategory(String word) {
+
+        Query q = em.createNamedQuery("Product.findByCategory");
+        q.setParameter("word", word);
+        return (List<Product>) q.getResultList();
+
     }
 
 }
