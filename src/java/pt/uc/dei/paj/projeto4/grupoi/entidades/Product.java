@@ -12,6 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 
 /**
@@ -19,6 +22,13 @@ import javax.persistence.Temporal;
  * @author Zueb LDA
  */
 @Entity
+@Table(name = "PRODUCT")
+@NamedQueries({
+    @NamedQuery(name = "Product.findByDesignation", query = "SELECT p FROM Product p WHERE p.brand LIKE :word OR p.model LIKE :word OR p.version LIKE :word"),
+    @NamedQuery(name = "Product.findByDescription", query = "SELECT p FROM Product p WHERE p.description LIKE :word"),
+    @NamedQuery(name = "Product.findByCategory", query = "SELECT p FROM Product p WHERE p.category LIKE :word"),
+    @NamedQuery(name = "Product.findStockByProduct", query = "SELECT p.stockQtt FROM Product p WHERE p.id = :id"),
+    @NamedQuery(name = "Product.findRepositionDate", query = "SELECT p.repoDate FROM Product p WHERE p.id = :id"),})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
