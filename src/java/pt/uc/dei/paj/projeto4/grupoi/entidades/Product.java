@@ -16,12 +16,14 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Zueb LDA
  */
 @Entity
+@XmlRootElement
 @Table(name = "PRODUCT")
 @NamedQueries({
     @NamedQuery(name = "Product.findByDesignation", query = "SELECT p FROM Product p WHERE p.brand LIKE :word OR p.model LIKE :word OR p.version LIKE :word"),
