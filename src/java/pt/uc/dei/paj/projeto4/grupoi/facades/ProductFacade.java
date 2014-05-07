@@ -55,7 +55,7 @@ public class ProductFacade extends AbstractFacade<Product> {
     public List<Product> findproductsByDescription(String word) {
 
         Query q = em.createNamedQuery("Product.findByDescription");
-        q.setParameter("word", word);
+        q.setParameter("word", "%" + word + "%");
         return (List<Product>) q.getResultList();
     }
 
