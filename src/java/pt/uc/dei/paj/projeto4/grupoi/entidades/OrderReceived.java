@@ -6,10 +6,12 @@
 package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -23,12 +25,46 @@ public class OrderReceived implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String orderDate;
+
+    private String deliveryDate;
+
+    @OneToMany
+    private List<OrderItems> orderItems;
+
+    public OrderReceived() {
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<OrderItems> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItems> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(String deliveryDate) {
+        this.deliveryDate = deliveryDate;
     }
 
     @Override
@@ -53,7 +89,7 @@ public class OrderReceived implements Serializable {
 
     @Override
     public String toString() {
-        return "pt.uc.dei.paj.projeto4.grupoi.entidades.OrdersReceived[ id=" + id + " ]";
+        return "OrderReceived{" + "id=" + id + ", orderDate=" + orderDate + ", deliveryDate=" + deliveryDate + '}';
     }
 
 }

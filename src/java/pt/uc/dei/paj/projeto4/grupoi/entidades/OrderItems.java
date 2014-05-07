@@ -37,6 +37,9 @@ public class OrderItems implements Serializable {
     @Column(name = "PRICE", nullable = false)
     private double price;
 
+    public OrderItems() {
+    }
+
     public Long getProductId() {
         return productId;
     }

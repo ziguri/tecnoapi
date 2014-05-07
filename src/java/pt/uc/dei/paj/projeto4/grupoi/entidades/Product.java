@@ -7,6 +7,7 @@ package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -55,6 +57,9 @@ public class Product implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(name = "RESPOSITION_DATE", nullable = false)
     private GregorianCalendar repoDate;
+
+    @OneToMany
+    private List<OrderItems> orderItems;
 
     public Long getId() {
         return id;
@@ -126,6 +131,14 @@ public class Product implements Serializable {
 
     public void setRepoDate(GregorianCalendar repoDate) {
         this.repoDate = repoDate;
+    }
+
+    public List<OrderItems> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItems> orderItems) {
+        this.orderItems = orderItems;
     }
 
     @Override

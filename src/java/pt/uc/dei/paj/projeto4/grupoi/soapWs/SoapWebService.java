@@ -12,6 +12,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
+import pt.uc.dei.paj.projeto4.grupoi.facades.OrderReceivedFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
 
 /**
@@ -24,6 +25,8 @@ public class SoapWebService {
 
     @Inject
     private ProductFacade productFacade;
+    @Inject
+    private OrderReceivedFacade orderReceivedFacade;
 
     /**
      * This is a sample web service operation
@@ -44,13 +47,13 @@ public class SoapWebService {
         return productFacade.findProductsByCategory(category);
     }
 
-    //GETTERS AND SETTERS
-    public ProductFacade getProductFacade() {
-        return productFacade;
-    }
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "makeOrderTest")
+    public String makeOrderTest(@WebParam(name = "productId") long productId, @WebParam(name = "quantity") int quantity) {
 
-    public void setProductFacade(ProductFacade productFacade) {
-        this.productFacade = productFacade;
+        return orderReceivedFacade.makeOrderTest(productId, quantity);
     }
 
 }
