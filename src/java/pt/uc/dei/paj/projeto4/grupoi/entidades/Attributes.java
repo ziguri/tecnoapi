@@ -6,11 +6,13 @@
 package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 /**
  *
@@ -26,6 +28,9 @@ public class Attributes implements Serializable {
     @Column(name = "ATTRIBUTE_NAME", nullable = false)
     private String attribute_name;
 
+    @ManyToMany
+    private List<Product> products;
+
     public Long getId() {
         return id;
     }
@@ -40,6 +45,14 @@ public class Attributes implements Serializable {
 
     public void setAttribute_name(String attribute_name) {
         this.attribute_name = attribute_name;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     @Override

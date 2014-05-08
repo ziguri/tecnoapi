@@ -11,10 +11,13 @@ import javax.inject.Inject;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.core.Response;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.OrderReceivedFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException;
 
 /**
  *
@@ -63,11 +66,20 @@ public class SoapWebService {
     }
 
     /**
-     * Login Method
+     * Login Method. Returns API Key to client if the login process went well
+     * the method will return API Key to client, if went wrong
+     *
+     * @param email
+     * @param password
+     * @return
      */
     @WebMethod(operationName = "login")
-    public boolean login(@WebParam(name = "email") String email, @WebParam(name = "password") String password) {
-        return clientFacade.login(email, password);
+    public double login(@WebParam(name = "email") String email, @WebParam(name = "password") String password) {
+        try {
+            return clientFacade.login(email, password);
+        } catch (LoginInvalidateException ex) {
+            throw new NotAuthorizedException(Response.Status.UNAUTHORIZED);
+        }
     }
 
 }
