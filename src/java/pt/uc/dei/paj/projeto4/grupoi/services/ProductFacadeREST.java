@@ -8,8 +8,6 @@ package pt.uc.dei.paj.projeto4.grupoi.services;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -48,8 +46,7 @@ public class ProductFacadeREST {
     @GET
     @Path("category/{category}")
     @Produces({"application/json"})
-    @WebMethod(operationName = "getProductsByCategory")
-    public List<Product> findByCategory(@PathParam("category") @WebParam(name = "category") String category) {
+    public List<Product> findByCategory(@PathParam("category") String category) {
         return produtFacade.findProductsByCategory(category);
     }
 
