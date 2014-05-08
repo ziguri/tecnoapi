@@ -51,19 +51,12 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
         String orderDate = "" + gc.get(Calendar.DAY_OF_MONTH) + " / " + gc.get(Calendar.MONTH) + " / " + gc.get(Calendar.YEAR);
         gc.add(Calendar.DAY_OF_MONTH, 7);
         String deliveryDate = "" + gc.get(Calendar.DAY_OF_MONTH) + " / " + gc.get(Calendar.MONTH) + " / " + gc.get(Calendar.YEAR);
-
-        System.err.println("################################################ORDER DATE --->" + orderDate);
-        System.err.println("################################################DELIVERY DATE --->" + deliveryDate);
         OrderReceived order = new OrderReceived();
 
         order.setOrderDate(orderDate);
         order.setDeliveryDate(deliveryDate);
 
-        System.err.println("+++++++++++++++++++++++++++++++++++++++++++++++ORDER --->" + order);
-
         this.create(order);
-
-        System.err.println("################################################ORDER --->" + order);
 
         return order;
     }
@@ -78,27 +71,20 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
         oItems.setQuantity(quantity);
         oItems.setPrice(p.getSellPrice() * quantity);
 
-        order.getOrderItems().add(oItems);
+        //order.getOrderItems().add(oItems);
         orderItems.create(oItems);
     }
 
     public String makeOrderTest(Long prodId, int quantity) {
 
         try {
-            //System.err.println("################################################ENTRA AQUI --->");
             OrderReceived order = orderReceived();
             OrderItems oItems = new OrderItems();
-
-        //System.err.println("################################################ORDER RECEIVED --->" + order);
             Product p = (Product) productFacade.find(prodId);
-
-        //System.err.println("#################################################PRODUCT PRODUCT --->" + p);
             oItems.setOrderReceivedId(order.getId());
             oItems.setProductId(prodId);
             oItems.setQuantity(quantity);
             oItems.setPrice(p.getSellPrice() * quantity);
-        //order.getOrderItems().add(oItems);
-            //System.err.println("++++++++++++++oItems ---> " + oItems);
             orderItems.create(oItems);
             return "Order successfuly added";
         } catch (Exception e) {

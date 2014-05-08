@@ -8,8 +8,11 @@ package pt.uc.dei.paj.projeto4.grupoi.services;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
@@ -29,7 +32,48 @@ public class ProductFacadeREST {
 
     }
 
-//    @POST
+    @GET
+    @Produces({"application/json"})
+    public List<Product> findAll() {
+        return produtFacade.findAll();
+    }
+
+    @GET
+    @Path("description/{description}")
+    @Produces({"application/json"})
+    public List<Product> findByDescription(@PathParam("description") String description) {
+        return produtFacade.findproductsByDescription(description);
+    }
+
+    @GET
+    @Path("category/{category}")
+    @Produces({"application/json"})
+    @WebMethod(operationName = "getProductsByCategory")
+    public List<Product> findByCategory(@PathParam("category") @WebParam(name = "category") String category) {
+        return produtFacade.findProductsByCategory(category);
+    }
+
+    @GET
+    @Path("designation/{designation}")
+    @Produces({"application/json"})
+    public List<Product> findByDesignation(@PathParam("designation") String designation) {
+        return produtFacade.findProductsByDesignation(designation);
+    }
+
+    @GET
+    @Path("stock/{id}")
+    @Produces({"text/plain"})
+    public int findStockByProduct(@PathParam("id") Long id) {
+        return produtFacade.findStockByProduct(id);
+    }
+
+    @GET
+    @Path("replacement-Date/{id}")
+    @Produces({"text/plain"})
+    public String findReplacementDateByProduct(@PathParam("id") Long id) {
+        return produtFacade.findReplacementDateByProduct(id);
+    }
+    //    @POST
 //    @Override
 //    @Consumes({"application/xml", "application/json"})
 //    public void create(Product entity) {
@@ -55,36 +99,6 @@ public class ProductFacadeREST {
 //    public Product find(@PathParam("id") Long id) {
 //        return super.find(id);
 //    }
-    @GET
-    @Produces({"application/json"})
-    public List<Product> findAll() {
-        return produtFacade.findAll();
-    }
-
-    @GET
-    @Produces({"application/json"})
-    public List<Product> findByDesignation() {
-        return produtFacade.findAll();
-    }
-
-    @GET
-    @Produces({"application/json"})
-    public List<Product> findByDescription() {
-        return produtFacade.findAll();
-    }
-
-    @GET
-    @Produces({"application/json"})
-    public List<Product> findByCategory() {
-        return produtFacade.findAll();
-    }
-
-    @GET
-    @Produces({"application/json"})
-    public List<Product> findStockByProduct() {
-        return produtFacade.findAll();
-    }
-
 //    @GET
 //    @Path("{from}/{to}")
 //    @Produces({"application/json"})

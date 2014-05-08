@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
@@ -19,6 +21,8 @@ import javax.persistence.OneToMany;
  * @author Zueb LDA
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "Client.findClientByEmail", query = "SELECT c FROM Client c  WHERE c.email=:email"),})
 public class Client implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,7 +39,7 @@ public class Client implements Serializable {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @OneToMany
+    @OneToMany(mappedBy = "client")
     private List<OrderReceived> orders;
 
     public Long getId() {

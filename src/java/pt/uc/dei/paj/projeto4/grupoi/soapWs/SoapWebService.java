@@ -12,6 +12,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
+import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.OrderReceivedFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
 
@@ -27,9 +28,14 @@ public class SoapWebService {
     private ProductFacade productFacade;
     @Inject
     private OrderReceivedFacade orderReceivedFacade;
+    @Inject
+    private ClientFacade clientFacade;
 
     /**
      * This is a sample web service operation
+     *
+     * @param txt
+     * @return
      */
     @WebMethod(operationName = "hello")
     public String hello(@WebParam(name = "name") String txt) {
@@ -54,6 +60,14 @@ public class SoapWebService {
     public String makeOrderTest(@WebParam(name = "productId") long productId, @WebParam(name = "quantity") int quantity) {
 
         return orderReceivedFacade.makeOrderTest(productId, quantity);
+    }
+
+    /**
+     * Login Method
+     */
+    @WebMethod(operationName = "login")
+    public boolean login(@WebParam(name = "email") String email, @WebParam(name = "password") String password) {
+        return clientFacade.login(email, password);
     }
 
 }

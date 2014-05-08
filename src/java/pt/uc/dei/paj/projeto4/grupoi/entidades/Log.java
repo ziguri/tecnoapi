@@ -6,33 +6,38 @@
 package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author Zueb LDA
  */
 @Entity
-public class OrderReceived implements Serializable {
+public class Log implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String orderDate;
+    @NotNull
+    private String invokedService;
 
-    private String deliveryDate;
-    @ManyToOne
-    private Client client;
+    @NotNull
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date logDate;
 
-//    @OneToMany
-//    private List<OrderItems> orderItems;
-    public OrderReceived() {
+    private Long clientId;
+
+    private String service;
+
+    public Log() {
     }
 
     public Long getId() {
@@ -43,35 +48,28 @@ public class OrderReceived implements Serializable {
         this.id = id;
     }
 
-//    public List<OrderItems> getOrderItems() {
-//        return orderItems;
-//    }
-//
-//    public void setOrderItems(List<OrderItems> orderItems) {
-//        this.orderItems = orderItems;
-//    }
-    public String getOrderDate() {
-        return orderDate;
+    public String getInvokedService() {
+        return invokedService;
     }
 
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate;
+    public void setInvokedService(String invokedService) {
+        this.invokedService = invokedService;
     }
 
-    public String getDeliveryDate() {
-        return deliveryDate;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setDeliveryDate(String deliveryDate) {
-        this.deliveryDate = deliveryDate;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
-    public Client getClient() {
-        return client;
+    public String getService() {
+        return service;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setService(String service) {
+        this.service = service;
     }
 
     @Override
@@ -84,10 +82,10 @@ public class OrderReceived implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof OrderReceived)) {
+        if (!(object instanceof Log)) {
             return false;
         }
-        OrderReceived other = (OrderReceived) object;
+        Log other = (Log) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -96,7 +94,7 @@ public class OrderReceived implements Serializable {
 
     @Override
     public String toString() {
-        return "OrderReceived{" + "id=" + id + ", orderDate=" + orderDate + ", deliveryDate=" + deliveryDate + '}';
+        return "pt.uc.dei.paj.projeto4.grupoi.entidades.Log[ id=" + id + " ]";
     }
 
 }
