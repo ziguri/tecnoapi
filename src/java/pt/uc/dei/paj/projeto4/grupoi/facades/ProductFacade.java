@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException;
 
 /**
  *
@@ -79,8 +80,9 @@ public class ProductFacade extends AbstractFacade<Product> {
      *
      * @param id
      * @return
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException
      */
-    public int findStockByProduct(Long id) {
+    public int findStockByProduct(Long id) throws ProductNotFoundException {
 
         try {
             Query q = em.createNamedQuery("Product.findStockByProduct");
@@ -88,7 +90,7 @@ public class ProductFacade extends AbstractFacade<Product> {
             return (int) q.getSingleResult();
         } catch (Exception e) {
 
-            return 0;
+            throw new ProductNotFoundException();
         }
     }
 
@@ -98,7 +100,7 @@ public class ProductFacade extends AbstractFacade<Product> {
      * @param id
      * @return
      */
-    public String findReplacementDateByProduct(Long id) {
+    public String findReplacementDateByProduct(Long id) throws ProductNotFoundException {
 
         String date = "";
         try {
@@ -108,7 +110,26 @@ public class ProductFacade extends AbstractFacade<Product> {
             return date;
         } catch (Exception e) {
 
-            return date;
+            throw new ProductNotFoundException();
+        }
+    }
+
+    /**
+     * Find and return all products
+     *
+     * @return List<Product>
+     */
+    public List<Product> findAllProducts() {
+
+        return this.findAll();
+    }
+
+    public Product findProductById(Long id) throws ProductNotFoundException {
+
+        try {
+            return (Product) this.find(id);
+        } catch (Exception e) {
+            throw new ProductNotFoundException();
         }
     }
 

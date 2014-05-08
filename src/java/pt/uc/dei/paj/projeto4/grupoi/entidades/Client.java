@@ -22,7 +22,9 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "Client.findClientByEmail", query = "SELECT c FROM Client c  WHERE c.email=:email"),})
+    @NamedQuery(name = "Client.findClientByEmail", query = "SELECT c FROM Client c  WHERE c.email=:email AND c.password=:password"),
+    @NamedQuery(name = "Client.findClientIdByApiKey", query = "SELECT c.id FROM Client c WHERE c.apiKey=:apikey"),
+    @NamedQuery(name = "Client.findClientByApiKey", query = "SELECT c FROM Client c WHERE c.apiKey=:apikey"),})
 public class Client implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,6 +40,9 @@ public class Client implements Serializable {
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
+
+    @Column(name = "APIKEY", nullable = true, unique = true)
+    private double apiKey;
 
     @OneToMany(mappedBy = "client")
     private List<OrderReceived> orders;
@@ -72,6 +77,14 @@ public class Client implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public double getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(double apiKey) {
+        this.apiKey = apiKey;
     }
 
     public List<OrderReceived> getOrders() {

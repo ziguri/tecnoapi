@@ -5,15 +5,15 @@
  */
 package pt.uc.dei.paj.projeto4.grupoi.facades;
 
+import java.util.Random;
 import javax.ejb.Stateless;
-import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import javax.servlet.http.HttpSession;
-import pt.uc.dei.paj.projeto4.grupoi.ejbs.SessionBean;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Client;
-import pt.uc.dei.paj.projeto4.grupoi.utilities.Encrypt;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException;
 
 /**
  *
@@ -30,37 +30,60 @@ public class ClientFacade extends AbstractFacade<Client> {
         return em;
     }
 
-    private SessionBean sessionBean;
-
     public ClientFacade() {
         super(Client.class);
     }
 
     /**
-     * ends session
-     */
-    private void invalidateSession() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        session.invalidate();
-    }
-
-    /**
-     * Verify if client exists in data base.
+     * Validate login.
      *
      * @param email
      * @return Client
      */
-    private Client existUser(String email) {
+    private Client validateLogin(String email, String password) throws LoginInvalidateException {
 
         Query q = em.createNamedQuery("Client.findClientByEmail");
-        q.setParameter("email", email);
+        q.setParameter("email", email).setParameter("password", password);
 
         try {
             return (Client) q.getSingleResult();
         } catch (Exception e) {
+            throw new LoginInvalidateException();
+        }
+    }
+
+    /**
+     * Check if the API Key already exist registered in data base.
+     *
+     * @param apiKey
+     * @return Long
+     */
+    private Long checkApiExistence(double apiKey) {
+
+        try {
+            Query q = em.createNamedQuery("Client.findClientIdByApiKey");
+            q.setParameter("apiKey", apiKey);
+            return (Long) q.getSingleResult();
+        } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Generates a unique API Key in data model.
+     *
+     * @return double
+     */
+    private double generateApiKey() {
+
+        Random rg = new Random();
+        double apiKey;
+
+        do {
+            apiKey = rg.nextDouble();
+        } while (checkApiExistence(apiKey) != null);
+
+        return apiKey;
 
     }
 
@@ -71,36 +94,22 @@ public class ClientFacade extends AbstractFacade<Client> {
      * @param email
      * @param password
      * @return boolean
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException
      */
-    public boolean login(String email, String password) {
-
-        Client c = existUser(email);
-
-        if (c != null) {
-
-            String passEncripted = Encrypt.cryptWithMD5(password);
-
-            if (passEncripted.equals(c.getPassword())) {
-
-                sessionBean.setClient(c);
-                return true;
-            } else {
-                return false;
-            }
-
-        } else {
-
-            return false;
-        }
-
+    public double login(String email, String password) throws LoginInvalidateException {
+        Client c = validateLogin(email, password);
+        double key = generateApiKey();
+        c.setApiKey(key);
+        return key;
     }
 
-    /**
-     * Client logout method.
-     */
-    public void logOut() {
-
-        sessionBean.setClient(null);
-        invalidateSession();
+    public Client getClientByApiKey(double apiKey) throws ClientNotFoundException {
+        try {
+            Query q = em.createNamedQuery("Client.findClientByApiKey");
+            q.setParameter("apiKey", apiKey);
+            return (Client) q.getSingleResult();
+        } catch (PersistenceException e) {
+            throw new ClientNotFoundException();
+        }
     }
 }

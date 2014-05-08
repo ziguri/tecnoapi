@@ -7,6 +7,8 @@ package pt.uc.dei.paj.projeto4.grupoi.facades;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -14,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException;
 
 /**
  *
@@ -61,18 +64,48 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
         return order;
     }
 
-    public void makeOrder(Product p, int quantity) {
+    /**
+     * Receives Product and quantity to create a new order.
+     *
+     * @param h
+     * @return
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException
+     */
+    public String makeOrder(Map<Long, Integer> h) throws OrderNotCreatedException {
 
-        OrderReceived order = orderReceived();
-        OrderItems oItems = new OrderItems();
+        try {
+            OrderReceived order = orderReceived();
 
-        oItems.setOrderReceivedId(order.getId());
-        oItems.setProductId(p.getId());
-        oItems.setQuantity(quantity);
-        oItems.setPrice(p.getSellPrice() * quantity);
+            for (Map.Entry items : h.entrySet()) {
 
-        //order.getOrderItems().add(oItems);
-        orderItems.create(oItems);
+                Long productId = (Long) items.getKey(); //Produto ID
+                Integer quantity = (Integer) items.getValue(); //Quantidade
+
+                Product p = productFacade.find(productId);//Get full Object
+
+                OrderItems oItems = new OrderItems();
+                oItems.setOrderReceivedId(order.getId());
+                oItems.setProductId(productId);
+                oItems.setQuantity(quantity);
+                oItems.setPrice(p.getSellPrice() * quantity);
+                orderItems.create(oItems);
+                p.setStockQtt(p.getStockQtt() - quantity);
+
+            }
+
+//            OrderItems oItems = new OrderItems();
+//            oItems.setOrderReceivedId(order.getId());
+//            oItems.setProductId(p.getId());
+//            oItems.setQuantity(quantity);
+//            oItems.setPrice(p.getSellPrice() * quantity);
+//
+//            orderItems.create(oItems);
+//
+//            p.setStockQtt(p.getStockQtt() - quantity);
+            return "Order Created Successfuly";
+        } catch (Exception e) {
+            throw new OrderNotCreatedException();
+        }
     }
 
     public String makeOrderTest(Long prodId, int quantity) {
@@ -81,6 +114,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
             OrderReceived order = orderReceived();
             OrderItems oItems = new OrderItems();
             Product p = (Product) productFacade.find(prodId);
+            p.setStockQtt(p.getStockQtt() - quantity);
             oItems.setOrderReceivedId(order.getId());
             oItems.setProductId(prodId);
             oItems.setQuantity(quantity);
@@ -93,6 +127,28 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
         }
     }
 
+    /**
+     * Find and return all orders.
+     *
+     * @return Lis<OrderReceived>
+     */
+    public List<OrderReceived> findAllOrders() {
+
+        return this.findAll();
+    }
+
+    /**
+     * Find and return one order
+     *
+     * @param orderId
+     * @return OrderReceived
+     */
+    public OrderReceived findorder(Long orderId) {
+
+        return (OrderReceived) this.find(orderId);
+    }
+
+    //Getter´s and Setter´s
     public OrderItemsFacade getOrderItems() {
         return orderItems;
     }
