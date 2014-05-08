@@ -9,10 +9,10 @@ package pt.uc.dei.paj.projeto4.grupoi.utilities;
  *
  * @author Zueb LDA
  */
-public class LoginInvalidateException extends Exception {
-    
-    public LoginInvalidateException() {
-        super("Invalid Login");
+public class ClientNotFoundException extends Exception {
+
+    public ClientNotFoundException() {
+        super("Client not found!!");
     }
-    
+
 }

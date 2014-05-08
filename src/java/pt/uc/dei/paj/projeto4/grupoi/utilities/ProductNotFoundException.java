@@ -9,10 +9,11 @@ package pt.uc.dei.paj.projeto4.grupoi.utilities;
  *
  * @author Zueb LDA
  */
-public class LoginInvalidateException extends Exception {
-    
-    public LoginInvalidateException() {
-        super("Invalid Login");
+public class ProductNotFoundException extends Exception {
+
+    public ProductNotFoundException() {
+
+        super("Product not found");
     }
-    
+
 }

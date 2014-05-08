@@ -6,18 +6,20 @@
 package pt.uc.dei.paj.projeto4.grupoi.soapWs;
 
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.core.Response;
+import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.OrderReceivedFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException;
 
 /**
  *
@@ -33,17 +35,6 @@ public class SoapWebService {
     private OrderReceivedFacade orderReceivedFacade;
     @Inject
     private ClientFacade clientFacade;
-
-    /**
-     * This is a sample web service operation
-     *
-     * @param txt
-     * @return
-     */
-    @WebMethod(operationName = "hello")
-    public String hello(@WebParam(name = "name") String txt) {
-        return "Hello " + txt + " !";
-    }
 
     /**
      * Web service operation
@@ -72,14 +63,95 @@ public class SoapWebService {
      * @param email
      * @param password
      * @return
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException
      */
     @WebMethod(operationName = "login")
-    public double login(@WebParam(name = "email") String email, @WebParam(name = "password") String password) {
-        try {
-            return clientFacade.login(email, password);
-        } catch (LoginInvalidateException ex) {
-            throw new NotAuthorizedException(Response.Status.UNAUTHORIZED);
-        }
+    public double login(@WebParam(name = "email") String email, @WebParam(name = "password") String password) throws LoginInvalidateException {
+
+        return clientFacade.login(email, password);
+
+//            throw new NotAuthorizedException(Response.Status.UNAUTHORIZED);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "findProductByDesignation")
+    public List<Product> findProductsByDesignation(@WebParam(name = "word") String word) {
+
+        return productFacade.findProductsByDesignation(word);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "findProductsByDescription")
+    public List<Product> findProductsByDescription(@WebParam(name = "word") String word) {
+
+        return productFacade.findproductsByDescription(word);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "findProductsByCategory")
+    public List<Product> findProductsByCategory(@WebParam(name = "word") String word) {
+
+        return productFacade.findProductsByCategory(word);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "findAllProducts")
+    public List<Product> findAllProducts() {
+        //TODO write your implementation code here:
+        return null;
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "findStockByProduct")
+    public int findStockByProduct(@WebParam(name = "productId") long productId) throws ProductNotFoundException {
+
+        return productFacade.findStockByProduct(productId);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "replacementDateByProduct")
+    public String replacementDateByProduct(@WebParam(name = "productId") long productId) throws ProductNotFoundException {
+
+        return productFacade.findReplacementDateByProduct(productId);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "findProductById")
+    public Product findProductById(@WebParam(name = "productId") long productId) {
+        //TODO write your implementation code here:
+        return null;
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "makeOrder")
+    public String makeOrder(@WebParam(name = "parameter") Map<Long, Integer> map) throws OrderNotCreatedException {
+
+        return orderReceivedFacade.makeOrder(map);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "findAllOrders")
+    public List<OrderReceived> findAllOrders() {
+
+        return orderReceivedFacade.findAll();
     }
 
 }

@@ -9,8 +9,10 @@ import java.util.Random;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Client;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException;
 
 /**
@@ -59,7 +61,7 @@ public class ClientFacade extends AbstractFacade<Client> {
     private Long checkApiExistence(double apiKey) {
 
         try {
-            Query q = em.createNamedQuery("Client.findClientByApiKey");
+            Query q = em.createNamedQuery("Client.findClientIdByApiKey");
             q.setParameter("apiKey", apiKey);
             return (Long) q.getSingleResult();
         } catch (Exception e) {
@@ -99,5 +101,15 @@ public class ClientFacade extends AbstractFacade<Client> {
         double key = generateApiKey();
         c.setApiKey(key);
         return key;
+    }
+
+    public Client getClientByApiKey(double apiKey) throws ClientNotFoundException {
+        try {
+            Query q = em.createNamedQuery("Client.findClientByApiKey");
+            q.setParameter("apiKey", apiKey);
+            return (Client) q.getSingleResult();
+        } catch (PersistenceException e) {
+            throw new ClientNotFoundException();
+        }
     }
 }

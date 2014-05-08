@@ -16,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException;
 
 /**
  *
@@ -63,14 +64,14 @@ public class ProductFacadeREST {
     @GET
     @Path("stock/{id}")
     @Produces({"text/plain"})
-    public int findStockByProduct(@PathParam("id") Long id) {
+    public int findStockByProduct(@PathParam("id") Long id) throws ProductNotFoundException {
         return produtFacade.findStockByProduct(id);
     }
 
     @GET
     @Path("replacement-Date/{id}")
     @Produces({"text/plain"})
-    public String findReplacementDateByProduct(@PathParam("id") Long id) {
+    public String findReplacementDateByProduct(@PathParam("id") Long id) throws ProductNotFoundException {
         return produtFacade.findReplacementDateByProduct(id);
     }
     //    @POST
