@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Product.findByDescription", query = "SELECT p FROM Product p WHERE p.description LIKE :word"),
     @NamedQuery(name = "Product.findByCategory", query = "SELECT p FROM Product p WHERE p.category LIKE :word"),
     @NamedQuery(name = "Product.findStockByProduct", query = "SELECT p.stockQtt FROM Product p WHERE p.id = :id"),
-    @NamedQuery(name = "Product.findRepositionDate", query = "SELECT p.repoDate FROM Product p WHERE p.id = :id"),})
+    @NamedQuery(name = "Product.findRepositionDate", query = "SELECT p FROM Product p WHERE p.id = :id"),})
 public class Product implements Serializable {
 
     @ManyToMany(mappedBy = "products")
@@ -172,7 +172,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "pt.uc.dei.paj.projeto4.grupoi.entidades.Products[ id=" + id + " ]";
+        return "Product{" + "id=" + id + ", brand=" + brand + ", model=" + model + ", version=" + version + ", description=" + description + ", category=" + category + ", stockQtt=" + stockQtt + ", sellPrice=" + sellPrice + ", repoDate=" + repoDate + '}';
     }
 
 }

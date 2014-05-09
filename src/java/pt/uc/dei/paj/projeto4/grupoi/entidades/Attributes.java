@@ -77,7 +77,7 @@ public class Attributes implements Serializable {
 
     @Override
     public String toString() {
-        return "pt.uc.dei.paj.projeto4.grupoi.entidades.Attributes[ id=" + id + " ]";
+        return "Attributes{" + "id=" + id + ", attribute_name=" + attribute_name + ", products=" + products + '}';
     }
 
 }

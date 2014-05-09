@@ -7,12 +7,12 @@ package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
-import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -26,26 +26,20 @@ public class Log implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
-    private String invokedService;
-
-    @NotNull
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date logDate;
 
     private Long clientId;
 
-    private String service;
+    @Column(nullable = false)
+    private String invokedService;
+
+    @Column(nullable = false)
+    private String task;
+
+    private String param;
 
     public Log() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getInvokedService() {
@@ -64,12 +58,20 @@ public class Log implements Serializable {
         this.clientId = clientId;
     }
 
-    public String getService() {
-        return service;
+    public String getTask() {
+        return task;
     }
 
-    public void setService(String service) {
-        this.service = service;
+    public void setTask(String task) {
+        this.task = task;
+    }
+
+    public String getParam() {
+        return param;
+    }
+
+    public void setParam(String param) {
+        this.param = param;
     }
 
     @Override
