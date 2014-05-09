@@ -59,7 +59,7 @@ public class SoapWebService {
     @WebMethod(operationName = "getProductsByCategory")
     public List<Product> getProductsByCategory(@WebParam(name = "category") String category, @WebParam(name = "key") double key) throws ProductNotFoundException {
         try {
-            List<Product> p = productFacade.findProductsByCategory(category);
+            List<Product> p = productFacade.findProductsByCategory(category, key);
 
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("SoapWs");
@@ -167,7 +167,7 @@ public class SoapWebService {
     public List<Product> findProductsByDescription(@WebParam(name = "word") String word, @WebParam(name = "key") double key) throws ProductNotFoundException {
 
         try {
-            List<Product> p = productFacade.findproductsByDescription(word);
+            List<Product> p = productFacade.findproductsByDescription(word, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("SoapWs");
             log.setTask("findProductsByDescription() - Success");
@@ -198,7 +198,7 @@ public class SoapWebService {
     public List<Product> findProductsByCategory(@WebParam(name = "word") String word, @WebParam(name = "key") double key) throws ProductNotFoundException {
 
         try {
-            List<Product> p = productFacade.findProductsByCategory(word);
+            List<Product> p = productFacade.findProductsByCategory(word, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("SoapWs");
             log.setTask("findProductsByCategory() - Success");
@@ -226,7 +226,7 @@ public class SoapWebService {
     @WebMethod(operationName = "findAllProducts")
     public List<Product> findAllProducts(@WebParam(name = "key") double key) throws ProductNotFoundException {
         try {
-            List<Product> p = productFacade.findAll();
+            List<Product> p = productFacade.findAllProducts(key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("SoapWs");
             log.setTask("findAllProducts() - Success");
@@ -257,7 +257,7 @@ public class SoapWebService {
     public int findStockByProduct(@WebParam(name = "productId") long productId, @WebParam(name = "key") double key) throws ProductNotFoundException {
 
         try {
-            int stock = productFacade.findStockByProduct(productId);
+            int stock = productFacade.findStockByProduct(productId, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("SoapWs");
             log.setTask("findStockByProduct() - Success");
@@ -287,7 +287,7 @@ public class SoapWebService {
     public String replacementDateByProduct(@WebParam(name = "productId") long productId, @WebParam(name = "key") double key) throws ProductNotFoundException {
 
         try {
-            String date = productFacade.findReplacementDateByProduct(productId);
+            String date = productFacade.findReplacementDateByProduct(productId, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("SoapWs");
             log.setTask("replacementDateByProduct() - Success");
@@ -316,7 +316,7 @@ public class SoapWebService {
     @WebMethod(operationName = "findProductById")
     public Product findProductById(@WebParam(name = "productId") long productId, @WebParam(name = "key") double key) throws ProductNotFoundException {
         try {
-            Product p = productFacade.find(productId);
+            Product p = productFacade.findProductById(productId, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("SoapWs");
             log.setTask("findProductById() - Success");
@@ -367,7 +367,7 @@ public class SoapWebService {
      * Web service operation
      */
     @WebMethod(operationName = "findAllOrders")
-    public List<OrderReceived> findAllOrders() {
+    public List<OrderReceived> findAllOrders(@WebParam(name = "key") double key) {
 
         return orderReceivedFacade.findAll();
     }

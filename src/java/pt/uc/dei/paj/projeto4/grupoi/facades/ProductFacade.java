@@ -59,10 +59,13 @@ public class ProductFacade extends AbstractFacade<Product> {
      * inserted matches with product description.
      *
      * @param word
-     * @return
+     * @param key
+     * @return List <Product>
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
      */
-    public List<Product> findproductsByDescription(String word) {
+    public List<Product> findproductsByDescription(String word, double key) throws ClientNotFoundException {
 
+        clientFacade.getClientByApiKey(key);
         Query q = em.createNamedQuery("Product.findByDescription");
         q.setParameter("word", "%" + word + "%");
         return (List<Product>) q.getResultList();
@@ -72,11 +75,14 @@ public class ProductFacade extends AbstractFacade<Product> {
      * Receives String to find all the products by category
      *
      * @param word
-     * @return
+     * @param key
+     * @return List <Product>
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
      *
      */
-    public List<Product> findProductsByCategory(String word) {
+    public List<Product> findProductsByCategory(String word, double key) throws ClientNotFoundException {
 
+        clientFacade.getClientByApiKey(key);
         Query q = em.createNamedQuery("Product.findByCategory");
         q.setParameter("word", word);
         return (List<Product>) q.getResultList();
@@ -87,17 +93,18 @@ public class ProductFacade extends AbstractFacade<Product> {
      * Receives product id in order to find the product stock by product id.
      *
      * @param id
-     * @return
+     * @param key
+     * @return List <Product>
      * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
      */
-    public int findStockByProduct(Long id) throws ProductNotFoundException {
-
+    public int findStockByProduct(Long id, double key) throws ProductNotFoundException, ClientNotFoundException {
+        clientFacade.getClientByApiKey(key);
         try {
             Query q = em.createNamedQuery("Product.findStockByProduct");
             q.setParameter("id", id);
             return (int) q.getSingleResult();
         } catch (Exception e) {
-
             throw new ProductNotFoundException();
         }
     }
@@ -106,10 +113,14 @@ public class ProductFacade extends AbstractFacade<Product> {
      * Receives product id in order to find product replacement date
      *
      * @param id
-     * @return
+     * @param key
+     * @return String
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
      */
-    public String findReplacementDateByProduct(Long id) throws ProductNotFoundException {
+    public String findReplacementDateByProduct(Long id, double key) throws ProductNotFoundException, ClientNotFoundException {
 
+        clientFacade.getClientByApiKey(key);
         String date = "";
         try {
             Query q = em.createNamedQuery("Product.findRepositionDate");
@@ -126,15 +137,27 @@ public class ProductFacade extends AbstractFacade<Product> {
     /**
      * Find and return all products
      *
+     * @param key
      * @return List<Product>
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
      */
-    public List<Product> findAllProducts() {
+    public List<Product> findAllProducts(double key) throws ClientNotFoundException {
 
+        clientFacade.getClientByApiKey(key);
         return this.findAll();
     }
 
-    public Product findProductById(Long id) throws ProductNotFoundException {
-
+    /**
+     * receives id in order to find product.
+     *
+     * @param id
+     * @param key
+     * @return
+     * @throws ProductNotFoundException
+     * @throws ClientNotFoundException
+     */
+    public Product findProductById(Long id, double key) throws ProductNotFoundException, ClientNotFoundException {
+        clientFacade.getClientByApiKey(key);
         try {
             return (Product) this.find(id);
         } catch (Exception e) {
