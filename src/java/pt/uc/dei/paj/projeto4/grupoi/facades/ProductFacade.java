@@ -7,10 +7,12 @@ package pt.uc.dei.paj.projeto4.grupoi.facades;
 
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException;
 
 /**
@@ -28,6 +30,9 @@ public class ProductFacade extends AbstractFacade<Product> {
         return em;
     }
 
+    @Inject
+    private ClientFacade clientFacade;
+
     public ProductFacade() {
         super(Product.class);
     }
@@ -36,13 +41,17 @@ public class ProductFacade extends AbstractFacade<Product> {
      * Receives String with word(s) to search all the products by designation
      *
      * @param word
+     * @param key
      * @return
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
      */
-    public List<Product> findProductsByDesignation(String word) {
+    public List<Product> findProductsByDesignation(String word, double key) throws ClientNotFoundException {
 
+        clientFacade.getClientByApiKey(key);
         Query q = em.createNamedQuery("Product.findByDesignation");
         q.setParameter("word", word);
         return (List<Product>) q.getResultList();
+
     }
 
     /**

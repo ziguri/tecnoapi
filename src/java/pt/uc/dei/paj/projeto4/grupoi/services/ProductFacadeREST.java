@@ -16,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException;
 
 /**
@@ -57,8 +58,8 @@ public class ProductFacadeREST {
     @GET
     @Path("designation/{designation}")
     @Produces({"application/json"})
-    public List<Product> findByDesignation(@PathParam("designation") String designation) {
-        return produtFacade.findProductsByDesignation(designation);
+    public List<Product> findByDesignation(@PathParam("designation") String designation, @PathParam("key") double key) throws ClientNotFoundException {
+        return produtFacade.findProductsByDesignation(designation, key);
     }
 
     @GET

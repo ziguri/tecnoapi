@@ -121,7 +121,7 @@ public class SoapWebService {
 
         }
 
-//            throw new NotAuthorizedException(Response.Status.UNAUTHORIZED);
+        //          throw new NotAuthorizedException(Response.Status.UNAUTHORIZED);
     }
 
     /**
@@ -137,7 +137,7 @@ public class SoapWebService {
     public List<Product> findProductsByDesignation(@WebParam(name = "word") String word, @WebParam(name = "key") double key) throws ProductNotFoundException {
 
         try {
-            List<Product> p = productFacade.findProductsByDesignation(word);
+            List<Product> p = productFacade.findProductsByDesignation(word, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("SoapWs");
             log.setTask("findProductByDesignation() - Success");
