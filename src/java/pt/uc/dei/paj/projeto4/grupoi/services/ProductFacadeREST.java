@@ -71,6 +71,13 @@ public class ProductFacadeREST {
     public String findReplacementDateByProduct(@PathParam("id") Long id) throws ProductNotFoundException {
         return produtFacade.findReplacementDateByProduct(id);
     }
+
+    @GET
+    @Path("{id}")
+    @Produces({"application/json"})
+    public Product find(@PathParam("id") Long id) throws ProductNotFoundException {
+        return produtFacade.find(id);
+    }
     //    @POST
 //    @Override
 //    @Consumes({"application/xml", "application/json"})
