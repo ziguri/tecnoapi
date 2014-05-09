@@ -58,7 +58,7 @@ public class ClientFacade extends AbstractFacade<Client> {
      * @param apiKey
      * @return Long
      */
-    private Long checkApiExistence(double apiKey) {
+    public Long checkApiExistence(double apiKey) {
 
         try {
             Query q = em.createNamedQuery("Client.findClientIdByApiKey");

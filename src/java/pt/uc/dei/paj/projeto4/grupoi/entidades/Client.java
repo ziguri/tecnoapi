@@ -117,7 +117,7 @@ public class Client implements Serializable {
 
     @Override
     public String toString() {
-        return "pt.uc.dei.paj.projeto4.grupoi.entidades.Client[ id=" + id + " ]";
+        return "Client{" + "id=" + id + ", name=" + name + ", email=" + email + '}';
     }
 
 }

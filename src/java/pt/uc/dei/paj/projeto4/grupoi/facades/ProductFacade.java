@@ -5,7 +5,6 @@
  */
 package pt.uc.dei.paj.projeto4.grupoi.facades;
 
-import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -106,7 +105,8 @@ public class ProductFacade extends AbstractFacade<Product> {
         try {
             Query q = em.createNamedQuery("Product.findRepositionDate");
             q.setParameter("id", id);
-            date += (Date) q.getSingleResult();
+            Product p = (Product) q.getSingleResult();
+            date += p.getRepoDate().getTime();
             return date;
         } catch (Exception e) {
 
