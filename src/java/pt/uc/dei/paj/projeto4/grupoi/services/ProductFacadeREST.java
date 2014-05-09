@@ -152,7 +152,7 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("replacement-Date/{id}")
+    @Path("{key}replacement-Date/{id}")
     @Produces({"text/plain"})
     public String findReplacementDateByProduct(@PathParam("id") Long id, @PathParam("key") double key) throws ProductNotFoundException {
         try {
@@ -174,7 +174,7 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("{id}")
+    @Path("{key}/{id}")
     @Produces({"application/json"})
     public Product find(@PathParam("id") Long id, @PathParam("key") double key) throws ProductNotFoundException {
 
