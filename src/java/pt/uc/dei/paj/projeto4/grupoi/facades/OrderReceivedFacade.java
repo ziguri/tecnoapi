@@ -16,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException;
 
 /**
@@ -41,6 +42,8 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
     private OrderItemsFacade orderItems;
     @Inject
     private ProductFacade productFacade;
+    @Inject
+    private ClientFacade clientFacade;
 
     /**
      * Create a new orderReceived
@@ -130,10 +133,12 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
     /**
      * Find and return all orders.
      *
+     * @param key
      * @return Lis<OrderReceived>
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
      */
-    public List<OrderReceived> findAllOrders() {
-
+    public List<OrderReceived> findAllOrders(double key) throws ClientNotFoundException {
+        clientFacade.getClientByApiKey(key);
         return this.findAll();
     }
 
@@ -141,10 +146,12 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
      * Find and return one order
      *
      * @param orderId
+     * @param key
      * @return OrderReceived
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
      */
-    public OrderReceived findorder(Long orderId) {
-
+    public OrderReceived findorder(Long orderId, double key) throws ClientNotFoundException {
+        clientFacade.getClientByApiKey(key);
         return (OrderReceived) this.find(orderId);
     }
 

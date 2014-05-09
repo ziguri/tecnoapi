@@ -20,8 +20,10 @@ import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.LogFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.OrderReceivedFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException;
 
 /**
@@ -365,20 +367,63 @@ public class SoapWebService {
 
     /**
      * Web service operation
+     *
+     * @param key
+     * @return List<OrderReceived>
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException
      */
     @WebMethod(operationName = "findAllOrders")
-    public List<OrderReceived> findAllOrders(@WebParam(name = "key") double key) {
+    public List<OrderReceived> findAllOrders(@WebParam(name = "key") double key) throws ClientNotFoundException, OrderNotFoundException {
 
-        return orderReceivedFacade.findAll();
+        try {
+            List<OrderReceived> order = orderReceivedFacade.findAllOrders(key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setInvokedService("SoapWs");
+            log.setTask("findAllOrders() - Success");
+            log.setParam(" ApiKey - " + key);
+            logFacade.create(log);
+            return order;
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setInvokedService("SoapWs");
+            log.setTask("findAllOrders() - Failed | Cause : " + e.getMessage());
+            log.setParam("ApiKey - " + key);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+
+        }
     }
 
     /**
      * Web service operation
+     *
+     * @param orderId
+     * @param key
+     * @return OrderReceived
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException
      */
     @WebMethod(operationName = "findOrder")
-    public OrderReceived findOrder(@WebParam(name = "orderId") long orderId) {
+    public OrderReceived findOrder(@WebParam(name = "orderId") long orderId, @WebParam(name = "key") double key) throws ClientNotFoundException, OrderNotFoundException {
 
-        return orderReceivedFacade.find(orderId);
+        try {
+            OrderReceived order = orderReceivedFacade.findorder(orderId, key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setInvokedService("SoapWs");
+            log.setTask("findOrder() - Success");
+            log.setParam("orderId - " + orderId + " || ApiKey - " + key);
+            logFacade.create(log);
+            return order;
+        } catch (Exception e) {
+
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setInvokedService("SoapWs");
+            log.setTask("findOrder() - Failed | Cause : " + e.getMessage());
+            log.setParam("orderId - " + orderId + " || ApiKey - " + key);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+        }
     }
 
 }
