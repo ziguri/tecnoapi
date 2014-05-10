@@ -40,6 +40,7 @@ public class ProductFacadeREST {
     }
 
     @GET
+    @Path("{key}")
     @Produces({"application/json"})
     public List<Product> findAllProducts(@PathParam("key") double key) throws ProductNotFoundException {
         try {
@@ -61,7 +62,7 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("description/{description}")
+    @Path("{key}/description/{description}")
     @Produces({"application/json"})
     public List<Product> findByDescription(@PathParam("description") String description, @PathParam("key") double key) throws ProductNotFoundException {
         try {
@@ -84,7 +85,7 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("category/{category}")
+    @Path("{key}/category/{category}")
     @Produces({"application/json"})
     public List<Product> findByCategory(@PathParam("category") String category, @PathParam("key") double key) throws ProductNotFoundException {
         try {
@@ -107,7 +108,7 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("designation/{designation}")
+    @Path("{key}/designation/{designation}")
     @Produces({"application/json"})
     public List<Product> findByDesignation(@PathParam("designation") String designation, @PathParam("key") double key) throws ProductNotFoundException {
         try {
@@ -129,7 +130,7 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("stock/{id}")
+    @Path("{key}/stock/{id}")
     @Produces({"text/plain"})
     public int findStockByProduct(@PathParam("id") Long id, @PathParam("key") double key) throws ProductNotFoundException {
 
@@ -152,7 +153,7 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("{key}replacement-Date/{id}")
+    @Path("{key}/replacement-Date/{id}")
     @Produces({"text/plain"})
     public String findReplacementDateByProduct(@PathParam("id") Long id, @PathParam("key") double key) throws ProductNotFoundException {
         try {
@@ -176,7 +177,7 @@ public class ProductFacadeREST {
     @GET
     @Path("{key}/{id}")
     @Produces({"application/json"})
-    public Product find(@PathParam("id") Long id, @PathParam("key") double key) throws ProductNotFoundException {
+    public Product find(@PathParam("key") double key, @PathParam("id") Long id) throws ProductNotFoundException {
 
         try {
             Product p = productFacade.findProductById(id, key);
