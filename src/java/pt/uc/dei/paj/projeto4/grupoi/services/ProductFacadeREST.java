@@ -12,6 +12,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Log;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
@@ -32,6 +34,8 @@ public class ProductFacadeREST {
     @Inject
     private LogFacade logFacade;
     private Log log;
+    private String token;
+    private Double key;
     @Inject
     private ClientFacade clientFacade;
 
@@ -40,11 +44,12 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("{key}")
     @Produces({"application/json"})
-    public List<Product> findAllProducts(@PathParam("key") double key) throws ProductNotFoundException {
+    public List<Product> findAllProducts(@Context HttpHeaders header) throws ProductNotFoundException {
         try {
-            List<Product> p = productFacade.findAll();
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
+            List<Product> p = productFacade.findAllProducts(key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("RestWs");
             log.setTask("findAllProducts() - Success");
@@ -62,10 +67,12 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("{key}/description/{description}")
+    @Path("description/{description}")
     @Produces({"application/json"})
-    public List<Product> findByDescription(@PathParam("description") String description, @PathParam("key") double key) throws ProductNotFoundException {
+    public List<Product> findByDescription(@Context HttpHeaders header, @PathParam("description") String description) throws ProductNotFoundException {
         try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
             List<Product> p = productFacade.findproductsByDescription(description, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("RestWs");
@@ -85,10 +92,12 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("{key}/category/{category}")
+    @Path("category/{category}")
     @Produces({"application/json"})
-    public List<Product> findByCategory(@PathParam("category") String category, @PathParam("key") double key) throws ProductNotFoundException {
+    public List<Product> findByCategory(@Context HttpHeaders header, @PathParam("category") String category) throws ProductNotFoundException {
         try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
             List<Product> p = productFacade.findProductsByCategory(category, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("RestWs");
@@ -108,10 +117,12 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("{key}/designation/{designation}")
+    @Path("designation/{designation}")
     @Produces({"application/json"})
-    public List<Product> findByDesignation(@PathParam("designation") String designation, @PathParam("key") double key) throws ProductNotFoundException {
+    public List<Product> findByDesignation(@Context HttpHeaders header, @PathParam("designation") String designation) throws ProductNotFoundException {
         try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
             List<Product> p = productFacade.findProductsByDesignation(designation, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("RestWs");
@@ -130,11 +141,13 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("{key}/stock/{id}")
+    @Path("stock/{id}")
     @Produces({"text/plain"})
-    public int findStockByProduct(@PathParam("id") Long id, @PathParam("key") double key) throws ProductNotFoundException {
+    public int findStockByProduct(@Context HttpHeaders header, @PathParam("id") Long id) throws ProductNotFoundException {
 
         try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
             int stock = productFacade.findStockByProduct(id, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("RestWs");
@@ -153,10 +166,12 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("{key}/replacement-Date/{id}")
+    @Path("replacement-Date/{id}")
     @Produces({"text/plain"})
-    public String findReplacementDateByProduct(@PathParam("id") Long id, @PathParam("key") double key) throws ProductNotFoundException {
+    public String findReplacementDateByProduct(@Context HttpHeaders header, @PathParam("id") Long id) throws ProductNotFoundException {
         try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
             String replaceDate = productFacade.findReplacementDateByProduct(id, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("RestWs");
@@ -175,11 +190,13 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("{key}/{id}")
+    @Path("{id}")
     @Produces({"application/json"})
-    public Product find(@PathParam("key") double key, @PathParam("id") Long id) throws ProductNotFoundException {
+    public Product find(@Context HttpHeaders header, @PathParam("id") Long id) throws ProductNotFoundException {
 
         try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
             Product p = productFacade.findProductById(id, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setInvokedService("RestWs");
@@ -196,44 +213,4 @@ public class ProductFacadeREST {
             throw new ProductNotFoundException();
         }
     }
-
-    //    @POST
-//    @Override
-//    @Consumes({"application/xml", "application/json"})
-//    public void create(Product entity) {
-//        super.create(entity);
-//    }
-//
-//    @PUT
-//    @Path("{id}")
-//    @Consumes({"application/xml", "application/json"})
-//    public void edit(@PathParam("id") Long id, Product entity) {
-//        super.edit(entity);
-//    }
-//
-//    @DELETE
-//    @Path("{id}")
-//    public void remove(@PathParam("id") Long id) {
-//        super.remove(super.find(id));
-//    }
-//
-//    @GET
-//    @Path("{id}")
-//    @Produces({"application/xml", "application/json"})
-//    public Product find(@PathParam("id") Long id) {
-//        return super.find(id);
-//    }
-//    @GET
-//    @Path("{from}/{to}")
-//    @Produces({"application/json"})
-//    public List<Product> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-//        return super.findRange(new int[]{from, to});
-//    }
-//
-//    @GET
-//    @Path("count")
-//    @Produces("text/plain")
-//    public String countREST() {
-//        return String.valueOf(super.count());
-//    }
 }
