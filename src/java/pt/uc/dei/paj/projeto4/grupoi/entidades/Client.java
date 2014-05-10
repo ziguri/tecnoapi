@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -25,6 +27,7 @@ import javax.persistence.OneToMany;
     @NamedQuery(name = "Client.findClientByEmail", query = "SELECT c FROM Client c  WHERE c.email=:email AND c.password=:password"),
     @NamedQuery(name = "Client.findClientIdByApiKey", query = "SELECT c.id FROM Client c WHERE c.apiKey=:apikey"),
     @NamedQuery(name = "Client.findClientByApiKey", query = "SELECT c FROM Client c WHERE c.apiKey=:apikey"),})
+@XmlRootElement
 public class Client implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -87,6 +90,7 @@ public class Client implements Serializable {
         this.apiKey = apiKey;
     }
 
+    @XmlTransient
     public List<OrderReceived> getOrders() {
         return orders;
     }
