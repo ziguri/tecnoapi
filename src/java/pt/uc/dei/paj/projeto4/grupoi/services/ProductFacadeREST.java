@@ -6,6 +6,7 @@
 package pt.uc.dei.paj.projeto4.grupoi.services;
 
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -41,6 +42,12 @@ public class ProductFacadeREST {
 
     public ProductFacadeREST() {
 
+    }
+
+    @PostConstruct
+    public void init() {
+
+        this.log = new Log();
     }
 
     @GET

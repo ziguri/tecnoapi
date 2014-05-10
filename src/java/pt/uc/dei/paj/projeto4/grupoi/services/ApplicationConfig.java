@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(pt.uc.dei.paj.projeto4.grupoi.services.ClientFacadeREST.class);
+        resources.add(pt.uc.dei.paj.projeto4.grupoi.services.OrderReceivedFacadeREST.class);
         resources.add(pt.uc.dei.paj.projeto4.grupoi.services.ProductFacadeREST.class);
     }
 

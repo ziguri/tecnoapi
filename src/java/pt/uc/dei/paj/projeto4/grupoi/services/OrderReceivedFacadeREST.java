@@ -17,33 +17,33 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import pt.uc.dei.paj.projeto4.grupoi.entidades.Client;
+import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 
 /**
  *
  * @author Zueb LDA
  */
 @Stateless
-@Path("pt.uc.dei.paj.projeto4.grupoi.entidades.client")
-public class ClientFacadeREST extends AbstractFacade<Client> {
+@Path("pt.uc.dei.paj.projeto4.grupoi.entidades.orderreceived")
+public class OrderReceivedFacadeREST extends AbstractFacade<OrderReceived> {
     @PersistenceContext(unitName = "TecnoApiPU")
     private EntityManager em;
 
-    public ClientFacadeREST() {
-        super(Client.class);
+    public OrderReceivedFacadeREST() {
+        super(OrderReceived.class);
     }
 
     @POST
     @Override
     @Consumes({"application/xml", "application/json"})
-    public void create(Client entity) {
+    public void create(OrderReceived entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({"application/xml", "application/json"})
-    public void edit(@PathParam("id") Long id, Client entity) {
+    public void edit(@PathParam("id") Long id, OrderReceived entity) {
         super.edit(entity);
     }
 
@@ -56,21 +56,21 @@ public class ClientFacadeREST extends AbstractFacade<Client> {
     @GET
     @Path("{id}")
     @Produces({"application/xml", "application/json"})
-    public Client find(@PathParam("id") Long id) {
+    public OrderReceived find(@PathParam("id") Long id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({"application/xml", "application/json"})
-    public List<Client> findAll() {
+    public List<OrderReceived> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({"application/xml", "application/json"})
-    public List<Client> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<OrderReceived> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 
