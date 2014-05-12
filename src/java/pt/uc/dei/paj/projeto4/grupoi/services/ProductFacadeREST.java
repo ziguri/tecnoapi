@@ -5,6 +5,8 @@
  */
 package pt.uc.dei.paj.projeto4.grupoi.services;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -39,6 +41,7 @@ public class ProductFacadeREST {
     private Double key;
     @Inject
     private ClientFacade clientFacade;
+    private Date today;
 
     public ProductFacadeREST() {
 
@@ -47,17 +50,21 @@ public class ProductFacadeREST {
     @PostConstruct
     public void init() {
 
-        this.log = new Log();
+        GregorianCalendar gc = new GregorianCalendar();
+        today = gc.getTime();
+
     }
 
     @GET
     @Produces({"application/json"})
     public List<Product> findAllProducts(@Context HttpHeaders header) throws ProductNotFoundException {
+        this.log = new Log();
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
             List<Product> p = productFacade.findAllProducts(key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findAllProducts() - Success");
             log.setParam("ApiKey - " + key);
@@ -77,11 +84,13 @@ public class ProductFacadeREST {
     @Path("description/{description}")
     @Produces({"application/json"})
     public List<Product> findByDescription(@Context HttpHeaders header, @PathParam("description") String description) throws ProductNotFoundException {
+        this.log = new Log();
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
             List<Product> p = productFacade.findproductsByDescription(description, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findProductsByDescription() - Success");
             log.setParam("Description - " + description + " || ApiKey - " + key);
@@ -102,11 +111,13 @@ public class ProductFacadeREST {
     @Path("category/{category}")
     @Produces({"application/json"})
     public List<Product> findByCategory(@Context HttpHeaders header, @PathParam("category") String category) throws ProductNotFoundException {
+        this.log = new Log();
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
             List<Product> p = productFacade.findProductsByCategory(category, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findProductsByCategory() - Success");
             log.setParam("Category - " + category + " || ApiKey - " + key);
@@ -127,11 +138,13 @@ public class ProductFacadeREST {
     @Path("designation/{designation}")
     @Produces({"application/json"})
     public List<Product> findByDesignation(@Context HttpHeaders header, @PathParam("designation") String designation) throws ProductNotFoundException {
+        this.log = new Log();
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
             List<Product> p = productFacade.findProductsByDesignation(designation, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findProductsByDesignation() - Success");
             log.setParam("Designation - " + designation + " || ApiKey - " + key);
@@ -151,12 +164,13 @@ public class ProductFacadeREST {
     @Path("stock/{id}")
     @Produces({"text/plain"})
     public int findStockByProduct(@Context HttpHeaders header, @PathParam("id") Long id) throws ProductNotFoundException {
-
+        this.log = new Log();
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
             int stock = productFacade.findStockByProduct(id, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findStockByProduct() - Success");
             log.setParam("ProductId - " + id + " || ApiKey - " + key);
@@ -176,11 +190,13 @@ public class ProductFacadeREST {
     @Path("replacement-Date/{id}")
     @Produces({"text/plain"})
     public String findReplacementDateByProduct(@Context HttpHeaders header, @PathParam("id") Long id) throws ProductNotFoundException {
+        this.log = new Log();
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
             String replaceDate = productFacade.findReplacementDateByProduct(id, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findReplacementDateByProduct() - Success");
             log.setParam("ProductId - " + id + " || ApiKey - " + key);
@@ -200,12 +216,13 @@ public class ProductFacadeREST {
     @Path("{id}")
     @Produces({"application/json"})
     public Product find(@Context HttpHeaders header, @PathParam("id") Long id) throws ProductNotFoundException {
-
+        this.log = new Log();
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
             Product p = productFacade.findProductById(id, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findProductById() - Success");
             log.setParam("ProductId - " + id + " || ApiKey - " + key);
