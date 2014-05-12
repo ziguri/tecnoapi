@@ -149,4 +149,31 @@ public class OrderReceivedFacadeREST {
         }
     }
 
+    @GET
+    @Path("delivery-date/{id}")
+    @Produces({"text/plain"})
+    public String orderDeliveryDate(@Context HttpHeaders header, @PathParam("id") Long id) throws ClientNotFoundException, OrderNotFoundException {
+        this.log = new Log();
+        try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
+            String date = orderReceivedFacade.orderDeliveryDate(id, key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("orderDeliveryDate() - Success");
+            log.setParam("ApiKey - " + key);
+            logFacade.create(log);
+            return date;
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("orderDeliveryDate() - Failed | Cause : " + e.getMessage());
+            log.setParam("ApiKey - " + key);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+        }
+    }
+
 }
