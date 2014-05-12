@@ -311,7 +311,7 @@ public class SoapWebService {
      * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ProductNotFoundException
      */
     @WebMethod(operationName = "replacementDateByProduct")
-    public String replacementDateByProduct(@WebParam(name = "productId") long productId, @WebParam(name = "key") double key) throws ProductNotFoundException {
+    public String replacementDateByProduct(@WebParam(name = "productId") long productId, @WebParam(name = "key") double key) throws ProductNotFoundException, ClientNotFoundException {
 
         log = new Log();
         try {
@@ -354,8 +354,10 @@ public class SoapWebService {
             log.setTask("findProductById() - Success");
             log.setParam("ProductId - " + productId + " || ApiKey - " + key);
             logFacade.create(log);
+
+            System.out.println("PRODUTO P ----> " + p);
             return p;
-        } catch (Exception e) {
+        } catch (ProductNotFoundException | ClientNotFoundException e) {
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);
             log.setInvokedService("SoapWs");
