@@ -158,11 +158,18 @@ public class ProductFacade extends AbstractFacade<Product> {
      */
     public Product findProductById(Long id, double key) throws ProductNotFoundException, ClientNotFoundException {
         clientFacade.getClientByApiKey(key);
+        //Product p = (Product) this.find(id);
         try {
-            return (Product) this.find(id);
-        } catch (Exception e) {
+            Product p = (Product) this.find(id);
+
+            if (p == null) {
+                System.err.println("PRODUTO NO FACADE ----> " + p);
+                throw new ProductNotFoundException();
+            }
+            return p;
+        } catch (IllegalArgumentException e) {
+            System.err.println("ENTRA AQUI");
             throw new ProductNotFoundException();
         }
     }
-
 }
