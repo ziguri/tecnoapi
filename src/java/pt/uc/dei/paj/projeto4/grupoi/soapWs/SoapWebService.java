@@ -381,7 +381,7 @@ public class SoapWebService {
 
         log = new Log();
         try {
-            String message = orderReceivedFacade.makeOrder(map);
+            String message = orderReceivedFacade.makeOrder(map, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);
             log.setInvokedService("SoapWs");

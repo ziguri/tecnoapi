@@ -5,85 +5,76 @@
  */
 package pt.uc.dei.paj.projeto4.grupoi.services;
 
-import java.util.List;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import pt.uc.dei.paj.projeto4.grupoi.entidades.Client;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import pt.uc.dei.paj.projeto4.grupoi.entidades.Log;
+import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
+import pt.uc.dei.paj.projeto4.grupoi.facades.LogFacade;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException;
 
 /**
  *
- * @author Zueb LDA
+ * @author Guilherme Pereira
  */
 @Stateless
-@Path("pt.uc.dei.paj.projeto4.grupoi.entidades.client")
-public class ClientFacadeREST extends AbstractFacade<Client> {
-    @PersistenceContext(unitName = "TecnoApiPU")
-    private EntityManager em;
+@Path("/client")
+public class ClientFacadeREST {
+
+    @Inject
+    private LogFacade logFacade;
+    @Inject
+    private ClientFacade clientFacade;
+    private Log log;
+    private String password;
+    private Date today;
 
     public ClientFacadeREST() {
-        super(Client.class);
+
     }
 
-    @POST
-    @Override
-    @Consumes({"application/xml", "application/json"})
-    public void create(Client entity) {
-        super.create(entity);
-    }
+    @PostConstruct
+    public void init() {
 
-    @PUT
-    @Path("{id}")
-    @Consumes({"application/xml", "application/json"})
-    public void edit(@PathParam("id") Long id, Client entity) {
-        super.edit(entity);
-    }
+        GregorianCalendar gc = new GregorianCalendar();
+        today = gc.getTime();
 
-    @DELETE
-    @Path("{id}")
-    public void remove(@PathParam("id") Long id) {
-        super.remove(super.find(id));
     }
 
     @GET
-    @Path("{id}")
-    @Produces({"application/xml", "application/json"})
-    public Client find(@PathParam("id") Long id) {
-        return super.find(id);
-    }
+    @Path("description/{email}")
+    @Produces({"application/json"})
+    public double findByDescription(@Context HttpHeaders header, @PathParam("email") String email) throws LoginInvalidateException {
+        log = new Log();
+        try {
+            password = header.getRequestHeaders().getFirst("key");
+            double key = clientFacade.login(email, password);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("login() - Success");
+            log.setParam("Email - " + email + " || Password - " + password);
+            logFacade.create(log);
+            return key;
+        } catch (LoginInvalidateException e) {
 
-    @GET
-    @Override
-    @Produces({"application/xml", "application/json"})
-    public List<Client> findAll() {
-        return super.findAll();
-    }
+            log.setClientId(null);
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("login() - Failed | Cause : " + e.getMessage());
+            log.setParam("Email - " + email + " || Password - " + password);
+            logFacade.create(log);
+            throw new LoginInvalidateException();
 
-    @GET
-    @Path("{from}/{to}")
-    @Produces({"application/xml", "application/json"})
-    public List<Client> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
-    }
-
-    @GET
-    @Path("count")
-    @Produces("text/plain")
-    public String countREST() {
-        return String.valueOf(super.count());
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
+        }
     }
 
 }

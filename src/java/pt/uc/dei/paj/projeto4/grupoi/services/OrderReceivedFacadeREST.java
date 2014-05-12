@@ -5,85 +5,148 @@
  */
 package pt.uc.dei.paj.projeto4.grupoi.services;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import pt.uc.dei.paj.projeto4.grupoi.entidades.Log;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
+import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
+import pt.uc.dei.paj.projeto4.grupoi.facades.LogFacade;
+import pt.uc.dei.paj.projeto4.grupoi.facades.OrderReceivedFacade;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException;
 
 /**
  *
- * @author Zueb LDA
+ * @author Guilherme Pereira
  */
 @Stateless
-@Path("pt.uc.dei.paj.projeto4.grupoi.entidades.orderreceived")
-public class OrderReceivedFacadeREST extends AbstractFacade<OrderReceived> {
-    @PersistenceContext(unitName = "TecnoApiPU")
-    private EntityManager em;
+@Path("/orderreceived")
+public class OrderReceivedFacadeREST {
+
+    @Inject
+    private LogFacade logFacade;
+    @Inject
+    private OrderReceivedFacade orderReceivedFacade;
+    @Inject
+    private ClientFacade clientFacade;
+    private Log log;
+    private String token;
+    private Double key;
+    private Date today;
 
     public OrderReceivedFacadeREST() {
-        super(OrderReceived.class);
+    }
+
+    @PostConstruct
+    public void init() {
+
+        GregorianCalendar gc = new GregorianCalendar();
+        today = gc.getTime();
+
     }
 
     @POST
-    @Override
-    @Consumes({"application/xml", "application/json"})
-    public void create(OrderReceived entity) {
-        super.create(entity);
+    @Consumes({"application/json"})
+    public String makeOrder(@Context HttpHeaders header, Map<Long, Integer> map) {
+        this.log = new Log();
+        try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
+            String message = orderReceivedFacade.makeOrder(map, key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("makeOrder() - Success");
+            log.setParam("Map - " + map + " || ApiKey - " + key);
+            logFacade.create(log);
+            return message;
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("makeOrder() - Failed | Cause : " + e.getMessage());
+            log.setParam("Map - " + map + " || ApiKey - " + key);
+            logFacade.create(log);
+            return "Order was not completed";
+        }
     }
 
-    @PUT
-    @Path("{id}")
-    @Consumes({"application/xml", "application/json"})
-    public void edit(@PathParam("id") Long id, OrderReceived entity) {
-        super.edit(entity);
-    }
-
-    @DELETE
-    @Path("{id}")
-    public void remove(@PathParam("id") Long id) {
-        super.remove(super.find(id));
-    }
-
+//    @PUT
+//    @Path("{id}")
+//    @Consumes({"application/xml", "application/json"})
+//    public void edit(@PathParam("id") Long id, OrderReceived entity) {
+//        super.edit(entity);
+//    }
+//
+//    @DELETE
+//    @Path("{id}")
+//    public void remove(@PathParam("id") Long id) {
+//        super.remove(super.find(id));
+//    }
     @GET
     @Path("{id}")
-    @Produces({"application/xml", "application/json"})
-    public OrderReceived find(@PathParam("id") Long id) {
-        return super.find(id);
+    @Produces({"application/json"})
+    public OrderReceived findOrder(@Context HttpHeaders header, @PathParam("id") Long id) throws ClientNotFoundException, OrderNotFoundException {
+        this.log = new Log();
+        try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
+            OrderReceived order = orderReceivedFacade.findorder(id, key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("findOrder() - Success");
+            log.setParam("ProductId - " + id + " || ApiKey - " + key);
+            logFacade.create(log);
+            return order;
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("findOrder() - Failed | Cause : " + e.getMessage());
+            log.setParam("ProductId - " + id + " || ApiKey - " + key);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+        }
     }
 
     @GET
-    @Override
-    @Produces({"application/xml", "application/json"})
-    public List<OrderReceived> findAll() {
-        return super.findAll();
-    }
-
-    @GET
-    @Path("{from}/{to}")
-    @Produces({"application/xml", "application/json"})
-    public List<OrderReceived> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
-    }
-
-    @GET
-    @Path("count")
-    @Produces("text/plain")
-    public String countREST() {
-        return String.valueOf(super.count());
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
+    @Produces({"application/json"})
+    public List<OrderReceived> findAllOrders(@Context HttpHeaders header) throws ClientNotFoundException, OrderNotFoundException {
+        this.log = new Log();
+        try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
+            List<OrderReceived> orderList = orderReceivedFacade.findAllOrders(key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("findAllOrders() - Success");
+            log.setParam("ApiKey - " + key);
+            logFacade.create(log);
+            return orderList;
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("findAllOrders() - Failed | Cause : " + e.getMessage());
+            log.setParam("ApiKey - " + key);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+        }
     }
 
 }
