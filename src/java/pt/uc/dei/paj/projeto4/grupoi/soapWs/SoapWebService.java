@@ -469,4 +469,28 @@ public class SoapWebService {
         }
     }
 
+    @WebMethod(operationName = "orderDeliveryDate")
+    public String orderDeliveryDate(@WebParam(name = "orderId") long orderId, @WebParam(name = "key") double key) throws ClientNotFoundException, OrderNotFoundException {
+
+        log = new Log();
+        try {
+            String orderDate = orderReceivedFacade.orderDeliveryDate(orderId, key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("SoapWs");
+            log.setTask("orderDeliveryDate() - Success");
+            log.setParam("orderId - " + orderId + " || ApiKey - " + key);
+            logFacade.create(log);
+            return orderDate;
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("SoapWs");
+            log.setTask("orderDeliveryDate() - Failed | Cause : " + e.getMessage());
+            log.setParam("orderId - " + orderId + " || ApiKey - " + key);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+        }
+    }
+
 }
