@@ -13,11 +13,13 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException;
 
 /**
  *
@@ -153,6 +155,17 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
     public OrderReceived findorder(Long orderId, double key) throws ClientNotFoundException {
         clientFacade.getClientByApiKey(key);
         return (OrderReceived) this.find(orderId);
+    }
+
+    public String orderDeliveryDate(Long orderId, double key) throws ClientNotFoundException, OrderNotFoundException {
+        clientFacade.getClientByApiKey(key);
+        try {
+            Query q = em.createNamedQuery("OrderReceived.findOrderDeliveryDateById");
+            q.setParameter("id", orderId);
+            return (String) q.getSingleResult();
+        } catch (Exception e) {
+            throw new OrderNotFoundException();
+        }
     }
 
     //Getter´s and Setter´s
