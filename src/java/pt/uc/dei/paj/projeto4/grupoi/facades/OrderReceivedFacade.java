@@ -74,7 +74,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
      * @return
      * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException
      */
-    public String makeOrder(Map<Long, Integer> h) throws OrderNotCreatedException {
+    public String makeOrder(Map<Long, Integer> h, double key) throws OrderNotCreatedException {
 
         try {
             OrderReceived order = orderReceived();
