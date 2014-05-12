@@ -295,7 +295,7 @@ public class SoapWebService {
             log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findStockByProduct() - Failed | Cause : " + e.getMessage());
-            log.setParam("ApiKey - " + key);
+            log.setParam("ProductId - " + productId + " || ApiKey - " + key);
             logFacade.create(log);
             throw new ProductNotFoundException();
         }
@@ -377,7 +377,7 @@ public class SoapWebService {
      * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException
      */
     @WebMethod(operationName = "makeOrder")
-    public String makeOrder(@WebParam(name = "parameter") Map<Long, Integer> map, @WebParam(name = "key") double key) throws OrderNotCreatedException {
+    public String makeOrder(@WebParam(name = "map") Map<Long, Integer> map, @WebParam(name = "key") double key) throws OrderNotCreatedException {
 
         log = new Log();
         try {

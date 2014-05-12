@@ -163,12 +163,10 @@ public class ProductFacade extends AbstractFacade<Product> {
             Product p = (Product) this.find(id);
 
             if (p == null) {
-                System.err.println("PRODUTO NO FACADE ----> " + p);
                 throw new ProductNotFoundException();
             }
             return p;
         } catch (IllegalArgumentException e) {
-            System.err.println("ENTRA AQUI");
             throw new ProductNotFoundException();
         }
     }

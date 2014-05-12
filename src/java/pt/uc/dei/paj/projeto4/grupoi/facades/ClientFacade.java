@@ -103,8 +103,13 @@ public class ClientFacade extends AbstractFacade<Client> {
     }
 
     public Client getClientByApiKey(double apiKey) throws ClientNotFoundException {
-        Query q = em.createNamedQuery("Client.findClientByApiKey");
-        q.setParameter("apikey", apiKey);
-        return (Client) q.getSingleResult();
+        try {
+            Query q = em.createNamedQuery("Client.findClientByApiKey");
+            q.setParameter("apikey", apiKey);
+            return (Client) q.getSingleResult();
+        } catch (Exception e) {
+
+            throw new ClientNotFoundException();
+        }
     }
 }

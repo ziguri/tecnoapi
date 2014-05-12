@@ -6,7 +6,7 @@
 package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -59,7 +59,7 @@ public class Product implements Serializable {
     private double sellPrice;
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(name = "RESPOSITION_DATE", nullable = false)
-    private GregorianCalendar repoDate;
+    private Date repoDate;
 
 //    @OneToMany
 //    private List<OrderItems> orderItems;
@@ -127,8 +127,12 @@ public class Product implements Serializable {
         this.sellPrice = sellPrice;
     }
 
-    public GregorianCalendar getRepoDate() {
+    public Date getRepoDate() {
         return repoDate;
+    }
+
+    public void setRepoDate(Date repoDate) {
+        this.repoDate = repoDate;
     }
 
     public List<Attributes> getAttributess() {
