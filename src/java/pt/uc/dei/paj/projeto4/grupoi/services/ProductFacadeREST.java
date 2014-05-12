@@ -72,6 +72,7 @@ public class ProductFacadeREST {
             return p;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findAllProducts() - Failed | Cause : " + e.getMessage());
             log.setParam("ApiKey - " + key);
@@ -99,6 +100,7 @@ public class ProductFacadeREST {
         } catch (Exception e) {
 
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findProductsByDescription() - Failed | Cause : " + e.getMessage());
             log.setParam("Description - " + description + " || ApiKey - " + key);
@@ -117,6 +119,7 @@ public class ProductFacadeREST {
             key = Double.parseDouble(token);
             List<Product> p = productFacade.findProductsByCategory(category, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findProductsByCategory() - Success");
@@ -152,6 +155,7 @@ public class ProductFacadeREST {
             return p;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findProductsByDesignation() - Failed | Cause : " + e.getMessage());
             log.setParam("Designation - " + designation + " || ApiKey - " + key);
@@ -170,6 +174,7 @@ public class ProductFacadeREST {
             key = Double.parseDouble(token);
             int stock = productFacade.findStockByProduct(id, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findStockByProduct() - Success");
@@ -204,6 +209,7 @@ public class ProductFacadeREST {
             return replaceDate;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findReplacementDateByProduct() - Failed | Cause : " + e.getMessage());
             log.setParam("ProductId - " + id + " || ApiKey - " + key);
@@ -230,6 +236,7 @@ public class ProductFacadeREST {
             return p;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("findProductById() - Failed | Cause : " + e.getMessage());
             log.setParam("ProductId - " + id + " || ApiKey - " + key);
