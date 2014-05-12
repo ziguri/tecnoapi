@@ -5,6 +5,8 @@
  */
 package pt.uc.dei.paj.projeto4.grupoi.soapWs;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -44,10 +46,13 @@ public class SoapWebService {
     private LogFacade logFacade;
     private Log log;
 
+    private Date today;
+
     @PostConstruct
     public void init() {
 
-        log = new Log();
+        GregorianCalendar gc = new GregorianCalendar();
+        today = gc.getTime();
     }
 
     /**
@@ -60,10 +65,12 @@ public class SoapWebService {
      */
     @WebMethod(operationName = "getProductsByCategory")
     public List<Product> getProductsByCategory(@WebParam(name = "category") String category, @WebParam(name = "key") double key) throws ProductNotFoundException {
+        log = new Log();
         try {
             List<Product> p = productFacade.findProductsByCategory(category, key);
 
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("GetProductsByCategory - Success");
             log.setParam("Category - " + category + " || ApiKey - " + key);
@@ -72,6 +79,7 @@ public class SoapWebService {
 
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("GetProductsByCategory - Failed | Cause : " + e.getMessage());
             log.setParam("Category - " + category + " || ApiKey - " + key);
@@ -104,9 +112,11 @@ public class SoapWebService {
      */
     @WebMethod(operationName = "login")
     public double login(@WebParam(name = "email") String email, @WebParam(name = "password") String password) throws LoginInvalidateException {
+        log = new Log();
         try {
             double key = clientFacade.login(email, password);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("login() - Success");
             log.setParam("Email - " + email + " || Password - " + password);
@@ -115,6 +125,7 @@ public class SoapWebService {
         } catch (LoginInvalidateException e) {
 
             log.setClientId(null);
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("login() - Failed | Cause : " + e.getMessage());
             log.setParam("Email - " + email + " || Password - " + password);
@@ -137,10 +148,11 @@ public class SoapWebService {
      */
     @WebMethod(operationName = "findProductByDesignation")
     public List<Product> findProductsByDesignation(@WebParam(name = "word") String word, @WebParam(name = "key") double key) throws ProductNotFoundException {
-
+        log = new Log();
         try {
             List<Product> p = productFacade.findProductsByDesignation(word, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findProductByDesignation() - Success");
             log.setParam("Word - " + word + " || ApiKey - " + key);
@@ -149,6 +161,7 @@ public class SoapWebService {
         } catch (Exception e) {
 
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findProductByDesignation() - Failed | Cause : " + e.getMessage());
             log.setParam("Word - " + word + " || ApiKey - " + key);
@@ -168,9 +181,11 @@ public class SoapWebService {
     @WebMethod(operationName = "findProductsByDescription")
     public List<Product> findProductsByDescription(@WebParam(name = "word") String word, @WebParam(name = "key") double key) throws ProductNotFoundException {
 
+        log = new Log();
         try {
             List<Product> p = productFacade.findproductsByDescription(word, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findProductsByDescription() - Success");
             log.setParam("Word - " + word + " || ApiKey - " + key);
@@ -179,6 +194,7 @@ public class SoapWebService {
         } catch (Exception e) {
 
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findProductsByDescription() - Failed | Cause : " + e.getMessage());
             log.setParam("Word - " + word + " || ApiKey - " + key);
@@ -199,9 +215,11 @@ public class SoapWebService {
     @WebMethod(operationName = "findProductsByCategory")
     public List<Product> findProductsByCategory(@WebParam(name = "word") String word, @WebParam(name = "key") double key) throws ProductNotFoundException {
 
+        log = new Log();
         try {
             List<Product> p = productFacade.findProductsByCategory(word, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findProductsByCategory() - Success");
             log.setParam("Word - " + word + " || ApiKey - " + key);
@@ -209,6 +227,7 @@ public class SoapWebService {
             return p;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findProductsByCategory() - Failed | Cause : " + e.getMessage());
             log.setParam("Word - " + word + " || ApiKey - " + key);
@@ -227,9 +246,11 @@ public class SoapWebService {
      */
     @WebMethod(operationName = "findAllProducts")
     public List<Product> findAllProducts(@WebParam(name = "key") double key) throws ProductNotFoundException {
+        log = new Log();
         try {
             List<Product> p = productFacade.findAllProducts(key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findAllProducts() - Success");
             log.setParam("ApiKey - " + key);
@@ -237,6 +258,7 @@ public class SoapWebService {
             return p;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findAllProducts() - Failed | Cause : " + e.getMessage());
             log.setParam("ApiKey - " + key);
@@ -258,9 +280,11 @@ public class SoapWebService {
     @WebMethod(operationName = "findStockByProduct")
     public int findStockByProduct(@WebParam(name = "productId") long productId, @WebParam(name = "key") double key) throws ProductNotFoundException {
 
+        log = new Log();
         try {
             int stock = productFacade.findStockByProduct(productId, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findStockByProduct() - Success");
             log.setParam("ProductId - " + productId + " || ApiKey - " + key);
@@ -268,6 +292,7 @@ public class SoapWebService {
             return stock;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findStockByProduct() - Failed | Cause : " + e.getMessage());
             log.setParam("ApiKey - " + key);
@@ -288,9 +313,11 @@ public class SoapWebService {
     @WebMethod(operationName = "replacementDateByProduct")
     public String replacementDateByProduct(@WebParam(name = "productId") long productId, @WebParam(name = "key") double key) throws ProductNotFoundException {
 
+        log = new Log();
         try {
             String date = productFacade.findReplacementDateByProduct(productId, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("replacementDateByProduct() - Success");
             log.setParam("ProductId - " + productId + " || ApiKey - " + key);
@@ -298,6 +325,7 @@ public class SoapWebService {
             return date;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("replacementDateByProduct() - Failed | Cause : " + e.getMessage());
             log.setParam("ApiKey - " + key);
@@ -317,9 +345,11 @@ public class SoapWebService {
      */
     @WebMethod(operationName = "findProductById")
     public Product findProductById(@WebParam(name = "productId") long productId, @WebParam(name = "key") double key) throws ProductNotFoundException {
+        log = new Log();
         try {
             Product p = productFacade.findProductById(productId, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findProductById() - Success");
             log.setParam("ProductId - " + productId + " || ApiKey - " + key);
@@ -327,6 +357,7 @@ public class SoapWebService {
             return p;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findProductById() - Failed | Cause : " + e.getMessage());
             log.setParam("ProductId - " + productId + " || ApiKey - " + key);
@@ -346,16 +377,20 @@ public class SoapWebService {
     @WebMethod(operationName = "makeOrder")
     public String makeOrder(@WebParam(name = "parameter") Map<Long, Integer> map, @WebParam(name = "key") double key) throws OrderNotCreatedException {
 
+        log = new Log();
         try {
             String message = orderReceivedFacade.makeOrder(map);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("makeOrder() - Success");
             log.setParam("Map - " + map + " || ApiKey - " + key);
             logFacade.create(log);
+            //new HashMap().put(1, 2);
             return message;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("makeOrder() - Failed | Cause : " + e.getMessage());
             log.setParam("Map - " + map + " || ApiKey - " + key);
@@ -376,9 +411,11 @@ public class SoapWebService {
     @WebMethod(operationName = "findAllOrders")
     public List<OrderReceived> findAllOrders(@WebParam(name = "key") double key) throws ClientNotFoundException, OrderNotFoundException {
 
+        log = new Log();
         try {
             List<OrderReceived> order = orderReceivedFacade.findAllOrders(key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findAllOrders() - Success");
             log.setParam(" ApiKey - " + key);
@@ -386,6 +423,7 @@ public class SoapWebService {
             return order;
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findAllOrders() - Failed | Cause : " + e.getMessage());
             log.setParam("ApiKey - " + key);
@@ -407,9 +445,11 @@ public class SoapWebService {
     @WebMethod(operationName = "findOrder")
     public OrderReceived findOrder(@WebParam(name = "orderId") long orderId, @WebParam(name = "key") double key) throws ClientNotFoundException, OrderNotFoundException {
 
+        log = new Log();
         try {
             OrderReceived order = orderReceivedFacade.findorder(orderId, key);
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findOrder() - Success");
             log.setParam("orderId - " + orderId + " || ApiKey - " + key);
@@ -418,6 +458,7 @@ public class SoapWebService {
         } catch (Exception e) {
 
             log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("findOrder() - Failed | Cause : " + e.getMessage());
             log.setParam("orderId - " + orderId + " || ApiKey - " + key);

@@ -74,6 +74,14 @@ public class Log implements Serializable {
         this.param = param;
     }
 
+    public Date getLogDate() {
+        return logDate;
+    }
+
+    public void setLogDate(Date logDate) {
+        this.logDate = logDate;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
