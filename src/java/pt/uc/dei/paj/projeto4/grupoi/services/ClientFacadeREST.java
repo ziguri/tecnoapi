@@ -50,12 +50,12 @@ public class ClientFacadeREST {
     }
 
     @GET
-    @Path("description/{email}")
+    @Path("{email}")
     @Produces({"application/json"})
     public double findByDescription(@Context HttpHeaders header, @PathParam("email") String email) throws LoginInvalidateException {
         log = new Log();
         try {
-            password = header.getRequestHeaders().getFirst("key");
+            password = header.getRequestHeaders().getFirst("password");
             double key = clientFacade.login(email, password);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);
