@@ -87,6 +87,7 @@ public class OrderItems implements Serializable {
         this.product_name = product_name;
     }
 
+    //És um palhaço!!!!!!!
     @Override
     public String toString() {
         return "OrderItems{" + "productId=" + productId + ", orderReceivedId=" + orderReceivedId + ", quantity=" + quantity + ", price=" + price + '}';
