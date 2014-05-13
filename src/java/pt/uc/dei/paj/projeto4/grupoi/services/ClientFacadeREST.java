@@ -65,6 +65,7 @@ public class ClientFacadeREST {
             logFacade.create(log);
             return key;
         } catch (LoginInvalidateException e) {
+
             log.setClientId(null);
             log.setLogDate(today);
             log.setInvokedService("RestWs");
