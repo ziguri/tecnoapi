@@ -487,6 +487,7 @@ public class SoapWebService {
             log.setTask("findOrdersByClientId() - Success");
             log.setParam("ApiKey - " + key);
             logFacade.create(log);
+
             return orderList;
         } catch (Exception e) {
 
