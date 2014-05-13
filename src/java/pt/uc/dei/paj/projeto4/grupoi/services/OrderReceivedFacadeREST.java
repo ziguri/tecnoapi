@@ -127,6 +127,33 @@ public class OrderReceivedFacadeREST {
     }
 
     @GET
+    @Path("find-order-by/{id}")
+    @Produces({"application/json"})
+    public List<OrderReceived> findOrderByClienId(@Context HttpHeaders header, @PathParam("id") Long id) throws ClientNotFoundException, OrderNotFoundException {
+        this.log = new Log();
+        try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
+            List<OrderReceived> orderList = orderReceivedFacade.findOrdersByClientId(id, key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("findOrdersByClientId() - Success");
+            log.setParam("ProductId - " + id + " || ApiKey - " + key);
+            logFacade.create(log);
+            return orderList;
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("findOrdersByClientId() - Failed | Cause : " + e.getMessage());
+            log.setParam("ProductId - " + id + " || ApiKey - " + key);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+        }
+    }
+
+    @GET
     @Produces({"application/json"})
     public List<OrderReceived> findAllOrders(@Context HttpHeaders header) throws ClientNotFoundException, OrderNotFoundException {
         this.log = new Log();
