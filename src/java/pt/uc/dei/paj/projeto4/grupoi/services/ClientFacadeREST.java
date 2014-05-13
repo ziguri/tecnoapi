@@ -51,8 +51,8 @@ public class ClientFacadeREST {
 
     @GET
     @Path("{email}")
-    @Produces({"application/json"})
-    public double findByDescription(@Context HttpHeaders header, @PathParam("email") String email) throws LoginInvalidateException {
+    @Produces({"text/plain"})
+    public double login(@Context HttpHeaders header, @PathParam("email") String email) throws LoginInvalidateException {
         log = new Log();
         try {
             password = header.getRequestHeaders().getFirst("password");
@@ -65,7 +65,6 @@ public class ClientFacadeREST {
             logFacade.create(log);
             return key;
         } catch (LoginInvalidateException e) {
-
             log.setClientId(null);
             log.setLogDate(today);
             log.setInvokedService("RestWs");
