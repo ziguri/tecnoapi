@@ -27,19 +27,19 @@ import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException;
  */
 @Stateless
 public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
-
+    
     @PersistenceContext(unitName = "TecnoApiPU")
     private EntityManager em;
-
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-
+    
     public OrderReceivedFacade() {
         super(OrderReceived.class);
     }
-
+    
     @Inject
     private OrderItemsFacade orderItems;
     @Inject
@@ -53,19 +53,19 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
      * @return OrderReceived
      */
     private OrderReceived orderReceived() {
-
+        
         GregorianCalendar gc = new GregorianCalendar();
-
+        
         String orderDate = "" + gc.get(Calendar.DAY_OF_MONTH) + " / " + gc.get(Calendar.MONTH) + " / " + gc.get(Calendar.YEAR);
         gc.add(Calendar.DAY_OF_MONTH, 7);
         String deliveryDate = "" + gc.get(Calendar.DAY_OF_MONTH) + " / " + gc.get(Calendar.MONTH) + " / " + gc.get(Calendar.YEAR);
         OrderReceived order = new OrderReceived();
-
+        
         order.setOrderDate(orderDate);
         order.setDeliveryDate(deliveryDate);
-
+        
         this.create(order);
-
+        
         return order;
     }
 
@@ -79,35 +79,36 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
      * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException
      */
     public String makeOrder(List<Item> items, double key) throws OrderNotCreatedException {
-
+        
         try {
             OrderReceived order = orderReceived();
             order.setClient(clientFacade.getClientByApiKey(key));
-
+            
             for (Item i : items) {
-
+                
                 Long productId = i.getProductId();
                 Integer quantity = i.getQuantity();
                 Product p = productFacade.find(productId);
                 OrderItems oItems = new OrderItems();
                 oItems.setOrderReceivedId(order.getId());
                 oItems.setProductId(productId);
+                oItems.setProduct_name(p.getBrand() + "-" + p.getModel());
                 oItems.setQuantity(quantity);
                 oItems.setPrice(p.getSellPrice() * quantity);
                 orderItems.create(oItems);
                 p.setStockQtt(p.getStockQtt() - quantity);
                 productFacade.edit(p);
             }
-
+            
             this.create(order);
             return "Order Created Successfuly";
         } catch (Exception e) {
             throw new OrderNotCreatedException();
         }
     }
-
+    
     public String makeOrderTest(Long prodId, int quantity) {
-
+        
         try {
             OrderReceived order = orderReceived();
             OrderItems oItems = new OrderItems();
@@ -120,7 +121,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
             orderItems.create(oItems);
             return "Order successfuly added";
         } catch (Exception e) {
-
+            
             return "Exception " + e + " - Unable to fulfill your request.";
         }
     }
@@ -149,7 +150,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
         clientFacade.getClientByApiKey(key);
         return (OrderReceived) this.find(orderId);
     }
-
+    
     public String orderDeliveryDate(Long orderId, double key) throws ClientNotFoundException, OrderNotFoundException {
         clientFacade.getClientByApiKey(key);
         try {
@@ -165,9 +166,9 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
     public OrderItemsFacade getOrderItems() {
         return orderItems;
     }
-
+    
     public void setOrderItems(OrderItemsFacade orderItems) {
         this.orderItems = orderItems;
     }
-
+    
 }
