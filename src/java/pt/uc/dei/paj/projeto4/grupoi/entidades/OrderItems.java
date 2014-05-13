@@ -13,7 +13,6 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.xml.bind.annotation.XmlRootElement;
 import pt.uc.dei.paj.projeto4.grupoi.pojos.CompositeOrderItem;
 
 /**
@@ -24,7 +23,6 @@ import pt.uc.dei.paj.projeto4.grupoi.pojos.CompositeOrderItem;
 @IdClass(CompositeOrderItem.class)
 @NamedQueries({
     @NamedQuery(name = "OrderItems.findItemsFromOrder", query = "SELECT i FROM OrderItems i  WHERE i.orderReceivedId=:id"),})
-@XmlRootElement
 public class OrderItems implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,6 +34,9 @@ public class OrderItems implements Serializable {
     @Id
     @JoinColumn(name = "ORDERRECEIVEDID")
     private Long orderReceivedId;
+
+    @Column(name = "PRODUCT_NAME", nullable = false)
+    private String product_name;
 
     @Column(name = "QUANTITY", nullable = false)
     private int quantity;
@@ -78,6 +79,15 @@ public class OrderItems implements Serializable {
         this.price = price;
     }
 
+    public String getProduct_name() {
+        return product_name;
+    }
+
+    public void setProduct_name(String product_name) {
+        this.product_name = product_name;
+    }
+
+    //És um palhaço!!!!!!!
     @Override
     public String toString() {
         return "OrderItems{" + "productId=" + productId + ", orderReceivedId=" + orderReceivedId + ", quantity=" + quantity + ", price=" + price + '}';
