@@ -6,7 +6,9 @@
 package pt.uc.dei.paj.projeto4.grupoi.services;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -43,6 +45,14 @@ public class OrderItemsFacadeREST {
     private Date today;
 
     public OrderItemsFacadeREST() {
+    }
+
+    @PostConstruct
+    public void init() {
+
+        GregorianCalendar gc = new GregorianCalendar();
+        today = gc.getTime();
+
     }
 
     @GET
