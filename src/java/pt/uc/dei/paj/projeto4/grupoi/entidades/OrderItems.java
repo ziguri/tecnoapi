@@ -35,6 +35,9 @@ public class OrderItems implements Serializable {
     @JoinColumn(name = "ORDERRECEIVEDID")
     private Long orderReceivedId;
 
+    @Column(name = "PRODUCT_NAME", nullable = false)
+    private String product_name;
+
     @Column(name = "QUANTITY", nullable = false)
     private int quantity;
 
@@ -74,6 +77,14 @@ public class OrderItems implements Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getProduct_name() {
+        return product_name;
+    }
+
+    public void setProduct_name(String product_name) {
+        this.product_name = product_name;
     }
 
     @Override
