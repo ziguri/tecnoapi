@@ -50,9 +50,10 @@ public class ClientFacadeREST {
     }
 
     @GET
-    @Path("{email}")
+    @Path("login/{email}")
     @Produces({"text/plain"})
     public double login(@Context HttpHeaders header, @PathParam("email") String email) throws LoginInvalidateException {
+        System.out.println("entrou no server");
         log = new Log();
         try {
             password = header.getRequestHeaders().getFirst("password");
