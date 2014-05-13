@@ -22,7 +22,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "OrderReceived.findOrderDeliveryDateById", query = "SELECT o.deliveryDate FROM OrderReceived o WHERE o.id = :id")})
+    @NamedQuery(name = "OrderReceived.findOrderDeliveryDateById", query = "SELECT o.deliveryDate FROM OrderReceived o WHERE o.id = :id"),
+    @NamedQuery(name = "OrderReceived.findOrdersByClientId", query = "SELECT o FROM OrderReceived o WHERE o.client.id = :id")
+})
 public class OrderReceived implements Serializable {
 
     private static final long serialVersionUID = 1L;
