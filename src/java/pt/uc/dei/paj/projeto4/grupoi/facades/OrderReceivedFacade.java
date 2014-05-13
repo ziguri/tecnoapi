@@ -8,7 +8,6 @@ package pt.uc.dei.paj.projeto4.grupoi.facades;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -17,6 +16,7 @@ import javax.persistence.Query;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
+import pt.uc.dei.paj.projeto4.grupoi.pojos.Item;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException;
@@ -72,22 +72,23 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
     /**
      * Receives Product and quantity to create a new order.
      *
+     * @param items
      * @param h
+     * @param key
      * @return
      * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException
      */
-    public String makeOrder(Map<Long, Integer> h, double key) throws OrderNotCreatedException {
+    public String makeOrder(List<Item> items, double key) throws OrderNotCreatedException {
 
         try {
             OrderReceived order = orderReceived();
+            order.setClient(clientFacade.getClientByApiKey(key));
 
-            for (Map.Entry items : h.entrySet()) {
+            for (Item i : items) {
 
-                Long productId = (Long) items.getKey(); //Produto ID
-                Integer quantity = (Integer) items.getValue(); //Quantidade
-
-                Product p = productFacade.find(productId);//Get full Object
-
+                Long productId = i.getProductId();
+                Integer quantity = i.getQuantity();
+                Product p = productFacade.find(productId);
                 OrderItems oItems = new OrderItems();
                 oItems.setOrderReceivedId(order.getId());
                 oItems.setProductId(productId);
@@ -95,18 +96,10 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
                 oItems.setPrice(p.getSellPrice() * quantity);
                 orderItems.create(oItems);
                 p.setStockQtt(p.getStockQtt() - quantity);
-
+                productFacade.edit(p);
             }
 
-//            OrderItems oItems = new OrderItems();
-//            oItems.setOrderReceivedId(order.getId());
-//            oItems.setProductId(p.getId());
-//            oItems.setQuantity(quantity);
-//            oItems.setPrice(p.getSellPrice() * quantity);
-//
-//            orderItems.create(oItems);
-//
-//            p.setStockQtt(p.getStockQtt() - quantity);
+            this.create(order);
             return "Order Created Successfuly";
         } catch (Exception e) {
             throw new OrderNotCreatedException();

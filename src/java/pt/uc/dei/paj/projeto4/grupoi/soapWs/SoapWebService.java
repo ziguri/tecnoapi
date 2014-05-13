@@ -8,7 +8,6 @@ package pt.uc.dei.paj.projeto4.grupoi.soapWs;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -22,6 +21,7 @@ import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.LogFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.OrderReceivedFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
+import pt.uc.dei.paj.projeto4.grupoi.pojos.Item;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException;
@@ -371,22 +371,23 @@ public class SoapWebService {
     /**
      * Receives hashMap with Product Id as key and quantity as value.
      *
+     * @param items
      * @param map
      * @param key
      * @return
      * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException
      */
     @WebMethod(operationName = "makeOrder")
-    public String makeOrder(@WebParam(name = "map") Map<Long, Integer> map, @WebParam(name = "key") double key) throws OrderNotCreatedException {
+    public String makeOrder(@WebParam(name = "items") List<Item> items, @WebParam(name = "key") double key) throws OrderNotCreatedException {
 
         log = new Log();
         try {
-            String message = orderReceivedFacade.makeOrder(map, key);
+            String message = orderReceivedFacade.makeOrder(items, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("makeOrder() - Success");
-            log.setParam("Map - " + map + " || ApiKey - " + key);
+            log.setParam("Items - " + items.toString() + " || ApiKey - " + key);
             logFacade.create(log);
             //new HashMap().put(1, 2);
             return message;
@@ -395,7 +396,7 @@ public class SoapWebService {
             log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("makeOrder() - Failed | Cause : " + e.getMessage());
-            log.setParam("Map - " + map + " || ApiKey - " + key);
+            log.setParam("Items - " + items.toString() + " || ApiKey - " + key);
             logFacade.create(log);
             return "Order was not completed";
 

@@ -8,7 +8,6 @@ package pt.uc.dei.paj.projeto4.grupoi.services;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -25,6 +24,7 @@ import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.LogFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.OrderReceivedFacade;
+import pt.uc.dei.paj.projeto4.grupoi.pojos.Item;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException;
 
@@ -60,17 +60,17 @@ public class OrderReceivedFacadeREST {
 
     @POST
     @Consumes({"application/json"})
-    public String makeOrder(@Context HttpHeaders header, Map<Long, Integer> map) {
+    public String makeOrder(@Context HttpHeaders header, List<Item> items) {
         this.log = new Log();
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
-            String message = orderReceivedFacade.makeOrder(map, key);
+            String message = orderReceivedFacade.makeOrder(items, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("makeOrder() - Success");
-            log.setParam("Map - " + map + " || ApiKey - " + key);
+            log.setParam("Items - " + items.toString() + " || ApiKey - " + key);
             logFacade.create(log);
             return message;
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class OrderReceivedFacadeREST {
             log.setLogDate(today);
             log.setInvokedService("RestWs");
             log.setTask("makeOrder() - Failed | Cause : " + e.getMessage());
-            log.setParam("Map - " + map + " || ApiKey - " + key);
+            log.setParam("Items - " + items.toString() + " || ApiKey - " + key);
             logFacade.create(log);
             return "Order was not completed";
         }
