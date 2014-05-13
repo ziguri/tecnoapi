@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import pt.uc.dei.paj.projeto4.grupoi.entidades.Client;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
@@ -162,10 +163,11 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
         }
     }
 
-    public List<OrderReceived> findOrdersByClientId(Long clientId, double key) throws ClientNotFoundException {
-        clientFacade.getClientByApiKey(key);
+    public List<OrderReceived> findOrdersByClientId(double key) throws ClientNotFoundException {
+        Client c = clientFacade.getClientByApiKey(key);
+
         Query q = em.createNamedQuery("OrderReceived.findOrdersByClientId");
-        q.setParameter("id", clientId);
+        q.setParameter("id", c.getId());
         return q.getResultList();
 
     }
