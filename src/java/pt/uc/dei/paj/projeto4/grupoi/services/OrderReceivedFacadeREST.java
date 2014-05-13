@@ -62,6 +62,9 @@ public class OrderReceivedFacadeREST {
     @Consumes({"application/json"})
     public String makeOrder(@Context HttpHeaders header, List<Item> items) {
         this.log = new Log();
+        System.out.println("entrou no server");
+        System.out.println("key" + key);
+        System.out.println("item" + items);
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
