@@ -13,6 +13,7 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.xml.bind.annotation.XmlRootElement;
 import pt.uc.dei.paj.projeto4.grupoi.pojos.CompositeOrderItem;
 
 /**
@@ -23,6 +24,7 @@ import pt.uc.dei.paj.projeto4.grupoi.pojos.CompositeOrderItem;
 @IdClass(CompositeOrderItem.class)
 @NamedQueries({
     @NamedQuery(name = "OrderItems.findItemsFromOrder", query = "SELECT i FROM OrderItems i  WHERE i.orderReceivedId=:id"),})
+@XmlRootElement
 public class OrderItems implements Serializable {
 
     private static final long serialVersionUID = 1L;
