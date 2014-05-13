@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import pt.uc.dei.paj.projeto4.grupoi.pojos.CompositeOrderItem;
 
 /**
@@ -19,6 +21,8 @@ import pt.uc.dei.paj.projeto4.grupoi.pojos.CompositeOrderItem;
  */
 @Entity
 @IdClass(CompositeOrderItem.class)
+@NamedQueries({
+    @NamedQuery(name = "OrderItems.findItemsFromOrder", query = "SELECT i FROM OrderItems i  WHERE i.orderReceivedId=:id"),})
 public class OrderItems implements Serializable {
 
     private static final long serialVersionUID = 1L;

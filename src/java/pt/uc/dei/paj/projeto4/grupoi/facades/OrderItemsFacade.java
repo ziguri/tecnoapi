@@ -5,10 +5,14 @@
  */
 package pt.uc.dei.paj.projeto4.grupoi.facades;
 
+import java.util.List;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 
 /**
  *
@@ -16,6 +20,7 @@ import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
  */
 @Stateless
 public class OrderItemsFacade extends AbstractFacade<OrderItems> {
+
     @PersistenceContext(unitName = "TecnoApiPU")
     private EntityManager em;
 
@@ -24,8 +29,20 @@ public class OrderItemsFacade extends AbstractFacade<OrderItems> {
         return em;
     }
 
+    @Inject
+    private ClientFacade clientFacade;
+
     public OrderItemsFacade() {
         super(OrderItems.class);
+    }
+
+    public List<OrderItems> findAllItemsFromOrder(Long id, double key) throws ClientNotFoundException {
+
+        clientFacade.getClientByApiKey(key);
+        Query q = em.createNamedQuery("OrderItems.findItemsFromOrder");
+        q.setParameter("id", id);
+        return q.getResultList();
+
     }
 
 }

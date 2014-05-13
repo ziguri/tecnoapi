@@ -15,14 +15,17 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Log;
+import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Product;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.LogFacade;
+import pt.uc.dei.paj.projeto4.grupoi.facades.OrderItemsFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.OrderReceivedFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ProductFacade;
 import pt.uc.dei.paj.projeto4.grupoi.pojos.Item;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
+import pt.uc.dei.paj.projeto4.grupoi.utilities.ItemNotFoundException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.LoginInvalidateException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException;
@@ -44,6 +47,8 @@ public class SoapWebService {
     private ClientFacade clientFacade;
     @Inject
     private LogFacade logFacade;
+    @Inject
+    private OrderItemsFacade itemsFacade;
     private Log log;
 
     private Date today;
@@ -492,6 +497,35 @@ public class SoapWebService {
             logFacade.create(log);
             throw new OrderNotFoundException();
         }
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "findOrderItems")
+    public List<OrderItems> findOrderItems(@WebParam(name = "orderId") long orderId, @WebParam(name = "apiKey") double apiKey) throws ClientNotFoundException, ItemNotFoundException {
+
+        log = new Log();
+        try {
+            List<OrderItems> result = itemsFacade.findAllItemsFromOrder(orderId, apiKey);
+            log.setClientId(clientFacade.checkApiExistence(apiKey));
+            log.setLogDate(today);
+            log.setInvokedService("SoapWs");
+            log.setTask("findOrderItems() - Success");
+            log.setParam("orderId - " + orderId + " || ApiKey - " + apiKey);
+            logFacade.create(log);
+            return result;
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(apiKey));
+            log.setLogDate(today);
+            log.setInvokedService("SoapWs");
+            log.setTask("findOrderItems() - Failed");
+            log.setParam("orderId - " + orderId + " || ApiKey - " + apiKey);
+            logFacade.create(log);
+            throw new ItemNotFoundException();
+
+        }
+
     }
 
 }
