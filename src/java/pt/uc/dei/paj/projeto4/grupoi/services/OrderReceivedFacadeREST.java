@@ -133,7 +133,7 @@ public class OrderReceivedFacadeREST {
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
-            List<OrderReceived> orderList = orderReceivedFacade.findOrdersByClientId(id, key);
+            List<OrderReceived> orderList = orderReceivedFacade.findOrdersByClientId(key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);
             log.setInvokedService("RestWs");
