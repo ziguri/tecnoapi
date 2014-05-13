@@ -100,7 +100,7 @@ public class OrderReceivedFacadeREST {
 //        super.remove(super.find(id));
 //    }
     @GET
-    @Path("{id}")
+    @Path("order/{id}")
     @Produces({"application/json"})
     public OrderReceived findOrder(@Context HttpHeaders header, @PathParam("id") Long id) throws ClientNotFoundException, OrderNotFoundException {
         this.log = new Log();
@@ -127,6 +127,7 @@ public class OrderReceivedFacadeREST {
     }
 
     @GET
+    @Path("/find-order-by-client")
     @Produces({"application/json"})
     public List<OrderReceived> findOrderByClienId(@Context HttpHeaders header) throws ClientNotFoundException, OrderNotFoundException {
         this.log = new Log();
@@ -153,6 +154,7 @@ public class OrderReceivedFacadeREST {
     }
 
     @GET
+    @Path("/find-all-orders")
     @Produces({"application/json"})
     public List<OrderReceived> findAllOrders(@Context HttpHeaders header) throws ClientNotFoundException, OrderNotFoundException {
         this.log = new Log();
