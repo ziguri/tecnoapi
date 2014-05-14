@@ -82,8 +82,9 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
     public String makeOrder(List<Item> items, double key) throws OrderNotCreatedException {
 
         try {
+            Client c = clientFacade.getClientByApiKey(key);
             OrderReceived order = orderReceived();
-            order.setClient(clientFacade.getClientByApiKey(key));
+            order.setClient(c);
 
             for (Item i : items) {
 
@@ -102,6 +103,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
             }
 
             this.create(order);
+            c.getOrders().add(order);
             return "Order Created Successfuly";
         } catch (Exception e) {
             throw new OrderNotCreatedException();
@@ -170,6 +172,23 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
         q.setParameter("id", c.getId());
         return q.getResultList();
 
+    }
+
+    /**
+     * Delete order
+     *
+     * @param id
+     * @param key
+     * @throws ClientNotFoundException
+     */
+    public void deleteOrder(Long orderId, double key) throws ClientNotFoundException {
+
+        Client c = clientFacade.getClientByApiKey(key);
+        c.getOrders().remove(this.find(orderId));
+        orderItems.deleteItemsFromOrder(orderId);
+        Query q = em.createNamedQuery("OrderReceived.deleteOrderById");
+        q.setParameter("id", orderId);
+        q.executeUpdate();
     }
 
     //Getter´s and Setter´s

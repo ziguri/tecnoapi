@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
 
@@ -39,10 +40,17 @@ public class OrderItemsFacade extends AbstractFacade<OrderItems> {
     public List<OrderItems> findAllItemsFromOrder(Long id, double key) throws ClientNotFoundException {
 
         clientFacade.getClientByApiKey(key);
-        Query q = em.createNamedQuery("OrderItems.findItemsFromOrder");
+        TypedQuery<OrderItems> q = em.createNamedQuery("OrderItems.findItemsFromOrder", OrderItems.class);
         q.setParameter("id", id);
         return q.getResultList();
 
+    }
+
+    public void deleteItemsFromOrder(Long id) {
+
+        Query q = em.createNamedQuery("OrderItems.deleteItemsFromOrder");
+        q.setParameter("id", id);
+        q.executeUpdate();
     }
 
 }

@@ -554,4 +554,36 @@ public class SoapWebService {
 
     }
 
+    /**
+     * Delete order by id
+     *
+     * @param orderId
+     * @param apiKey
+     * @return
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException
+     */
+    @WebMethod(operationName = "deleteOrderById")
+    public String deleteOrderById(@WebParam(name = "orderId") long orderId, @WebParam(name = "apiKey") double apiKey) throws ClientNotFoundException, OrderNotFoundException {
+        try {
+            orderReceivedFacade.deleteOrder(orderId, apiKey);
+            log.setClientId(clientFacade.checkApiExistence(apiKey));
+            log.setLogDate(today);
+            log.setInvokedService("SoapWs");
+            log.setTask("deleteOrderById() - Success");
+            log.setParam("orderId - " + orderId + " || ApiKey - " + apiKey);
+            return "Deleted";
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(apiKey));
+            log.setLogDate(today);
+            log.setInvokedService("SoapWs");
+            log.setTask("deleteOrderById() - Failed");
+            log.setParam("orderId - " + orderId + " || ApiKey - " + apiKey);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+
+        }
+
+    }
+
 }

@@ -7,6 +7,7 @@ package pt.uc.dei.paj.projeto4.grupoi.entidades;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,7 +48,7 @@ public class Client implements Serializable {
     @Column(name = "APIKEY", nullable = true, unique = true)
     private double apiKey;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<OrderReceived> orders;
 
     public Long getId() {

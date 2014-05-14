@@ -23,7 +23,8 @@ import pt.uc.dei.paj.projeto4.grupoi.pojos.CompositeOrderItem;
 @Entity
 @IdClass(CompositeOrderItem.class)
 @NamedQueries({
-    @NamedQuery(name = "OrderItems.findItemsFromOrder", query = "SELECT i FROM OrderItems i  WHERE i.orderReceivedId=:id"),})
+    @NamedQuery(name = "OrderItems.findItemsFromOrder", query = "SELECT i FROM OrderItems i  WHERE i.orderReceivedId=:id"),
+    @NamedQuery(name = "OrderItems.deleteItemsFromOrder", query = "DELETE FROM OrderItems i  WHERE i.orderReceivedId=:id"),})
 @XmlRootElement
 public class OrderItems implements Serializable {
 
