@@ -50,7 +50,6 @@ public class ClientFacadeREST {
     }
 
     @GET
-    @Path("login")
     @Produces({"text/plain"})
     public double login(@Context HttpHeaders header) throws LoginInvalidateException {
         System.out.println("entrou no server");

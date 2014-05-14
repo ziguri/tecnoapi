@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -62,9 +63,7 @@ public class OrderReceivedFacadeREST {
     @Consumes({"application/json"})
     public String makeOrder(@Context HttpHeaders header, List<Item> items) {
         this.log = new Log();
-        System.out.println("entrou no server");
-        System.out.println("key" + key);
-        System.out.println("item" + items);
+
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
@@ -94,11 +93,32 @@ public class OrderReceivedFacadeREST {
 //        super.edit(entity);
 //    }
 //
-//    @DELETE
-//    @Path("{id}")
-//    public void remove(@PathParam("id") Long id) {
-//        super.remove(super.find(id));
-//    }
+    @DELETE
+    @Path("{id}")
+    public String remove(@Context HttpHeaders header, @PathParam("id") Long id) throws ClientNotFoundException, OrderNotFoundException {
+        this.log = new Log();
+        try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
+            orderReceivedFacade.deleteOrder(id, key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("deleteOrderById() - Success");
+            log.setParam("orderId - " + id + " || ApiKey - " + key);
+            return "Deleted";
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("deleteOrderById() - Failed");
+            log.setParam("orderId - " + id + " || ApiKey - " + key);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+
+        }
+    }
+
     @GET
     @Path("{id}")
     @Produces({"application/json"})
