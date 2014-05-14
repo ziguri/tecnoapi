@@ -96,7 +96,7 @@ public class OrderReceivedFacadeREST {
         try {
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
-            List<OrderItems> result = orderReceivedFacade.editOrder(id, list, key);
+            orderReceivedFacade.editOrder(id, list, key);
             orderReceivedFacade.deleteOrder(id, key);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);
