@@ -191,6 +191,28 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
         q.executeUpdate();
     }
 
+//    public void updateStock(Long orderId, List<OrderItems> newList, double key){
+//    
+//        List<OrderItems> oldList = orderItems.getAllItemsFromOrder(orderId);
+//        
+//        
+//    }
+    public List<OrderItems> editOrder(Long orderId, List<OrderItems> newList, double key) throws ClientNotFoundException {
+
+        clientFacade.getClientByApiKey(key);
+
+        orderItems.deleteItemsFromOrder(orderId);
+
+        for (OrderItems item : newList) {
+
+            orderItems.create(item);
+
+        }
+
+        return newList;
+
+    }
+
     //Getter´s and Setter´s
     public OrderItemsFacade getOrderItems() {
         return orderItems;

@@ -46,6 +46,14 @@ public class OrderItemsFacade extends AbstractFacade<OrderItems> {
 
     }
 
+    public List<OrderItems> getAllItemsFromOrder(Long id) {
+
+        TypedQuery<OrderItems> q = em.createNamedQuery("OrderItems.findItemsFromOrder", OrderItems.class);
+        q.setParameter("id", id);
+        return q.getResultList();
+
+    }
+
     public void deleteItemsFromOrder(Long id) {
 
         Query q = em.createNamedQuery("OrderItems.deleteItemsFromOrder");
