@@ -197,8 +197,8 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
 //        
 //        
 //    }
-    public List<OrderItems> editOrder(Long orderId, List<OrderItems> newList, double key) throws ClientNotFoundException {
-
+    public void editOrder(Long orderId, List<OrderItems> newList, double key) throws ClientNotFoundException {
+///Palhaço
         clientFacade.getClientByApiKey(key);
 
         orderItems.deleteItemsFromOrder(orderId);
@@ -208,8 +208,6 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
             orderItems.create(item);
 
         }
-
-        return newList;
 
     }
 
