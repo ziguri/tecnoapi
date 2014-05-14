@@ -198,7 +198,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
 //        
 //    }
     public void editOrder(Long orderId, List<OrderItems> newList, double key) throws ClientNotFoundException {
-
+///Palhaço
         clientFacade.getClientByApiKey(key);
 
         orderItems.deleteItemsFromOrder(orderId);
