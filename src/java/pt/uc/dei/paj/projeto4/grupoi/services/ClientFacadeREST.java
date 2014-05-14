@@ -12,7 +12,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -35,6 +34,7 @@ public class ClientFacadeREST {
     private ClientFacade clientFacade;
     private Log log;
     private String password;
+    private String email;
     private Date today;
 
     public ClientFacadeREST() {
@@ -50,13 +50,14 @@ public class ClientFacadeREST {
     }
 
     @GET
-    @Path("login/{email}")
+    @Path("login")
     @Produces({"text/plain"})
-    public double login(@Context HttpHeaders header, @PathParam("email") String email) throws LoginInvalidateException {
+    public double login(@Context HttpHeaders header) throws LoginInvalidateException {
         System.out.println("entrou no server");
         log = new Log();
         try {
             password = header.getRequestHeaders().getFirst("password");
+            email = header.getRequestHeaders().getFirst("email");
             double key = clientFacade.login(email, password);
             log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);

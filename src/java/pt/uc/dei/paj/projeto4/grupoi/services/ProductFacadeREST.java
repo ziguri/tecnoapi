@@ -5,16 +5,19 @@
  */
 package pt.uc.dei.paj.projeto4.grupoi.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Log;
@@ -57,24 +60,36 @@ public class ProductFacadeREST {
 
     @GET
     @Produces({"application/json"})
-    public List<Product> findAllProducts(@Context HttpHeaders header) throws ProductNotFoundException {
+    public List<Product> findProducts(@Context HttpHeaders header, @DefaultValue("") @QueryParam("description") String description,
+            @DefaultValue("") @QueryParam("designation") String designation,
+            @DefaultValue("") @PathParam("category") String category) throws ProductNotFoundException {
         this.log = new Log();
+
         try {
+            List<Product> p = new ArrayList();
             token = header.getRequestHeaders().getFirst("key");
             key = Double.parseDouble(token);
-            List<Product> p = productFacade.findAllProducts(key);
-            log.setClientId(clientFacade.checkApiExistence(key));
+            if (description.isEmpty() && designation.isEmpty() && category.isEmpty()) {
+                p = productFacade.findAllProducts(key);
+            } else if (!designation.isEmpty()) {
+                p = productFacade.findProductsByDesignation(designation, key);
+            } else if (!category.isEmpty()) {
+                p = productFacade.findProductsByCategory(category, key);
+            } else {
+                p = productFacade.findproductsByDescription(description, key);
+            }
+            //log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);
             log.setInvokedService("RestWs");
-            log.setTask("findAllProducts() - Success");
+            log.setTask("findProducts() - Success");
             log.setParam("ApiKey - " + key);
             logFacade.create(log);
             return p;
         } catch (Exception e) {
-            log.setClientId(clientFacade.checkApiExistence(key));
+            //log.setClientId(clientFacade.checkApiExistence(key));
             log.setLogDate(today);
             log.setInvokedService("RestWs");
-            log.setTask("findAllProducts() - Failed | Cause : " + e.getMessage());
+            log.setTask("findProducts() - Failed | Cause : " + e.getMessage());
             log.setParam("ApiKey - " + key);
             logFacade.create(log);
             throw new ProductNotFoundException();
@@ -82,90 +97,7 @@ public class ProductFacadeREST {
     }
 
     @GET
-    @Path("description/{description}")
-    @Produces({"application/json"})
-    public List<Product> findByDescription(@Context HttpHeaders header, @PathParam("description") String description) throws ProductNotFoundException {
-        this.log = new Log();
-        try {
-            token = header.getRequestHeaders().getFirst("key");
-            key = Double.parseDouble(token);
-            List<Product> p = productFacade.findproductsByDescription(description, key);
-            log.setClientId(clientFacade.checkApiExistence(key));
-            log.setLogDate(today);
-            log.setInvokedService("RestWs");
-            log.setTask("findProductsByDescription() - Success");
-            log.setParam("Description - " + description + " || ApiKey - " + key);
-            logFacade.create(log);
-            return p;
-        } catch (Exception e) {
-
-            log.setClientId(clientFacade.checkApiExistence(key));
-            log.setLogDate(today);
-            log.setInvokedService("RestWs");
-            log.setTask("findProductsByDescription() - Failed | Cause : " + e.getMessage());
-            log.setParam("Description - " + description + " || ApiKey - " + key);
-            logFacade.create(log);
-            throw new ProductNotFoundException();
-        }
-    }
-
-    @GET
-    @Path("category/{category}")
-    @Produces({"application/json"})
-    public List<Product> findByCategory(@Context HttpHeaders header, @PathParam("category") String category) throws ProductNotFoundException {
-        this.log = new Log();
-        try {
-            token = header.getRequestHeaders().getFirst("key");
-            key = Double.parseDouble(token);
-            List<Product> p = productFacade.findProductsByCategory(category, key);
-            log.setClientId(clientFacade.checkApiExistence(key));
-            log.setLogDate(today);
-            log.setLogDate(today);
-            log.setInvokedService("RestWs");
-            log.setTask("findProductsByCategory() - Success");
-            log.setParam("Category - " + category + " || ApiKey - " + key);
-            logFacade.create(log);
-            return p;
-        } catch (Exception e) {
-
-            log.setClientId(clientFacade.checkApiExistence(key));
-            log.setInvokedService("RestWs");
-            log.setTask("findProductsByCategory() - Failed | Cause : " + e.getMessage());
-            log.setParam("Category - " + category + " || ApiKey - " + key);
-            logFacade.create(log);
-            throw new ProductNotFoundException();
-        }
-    }
-
-    @GET
-    @Path("designation/{designation}")
-    @Produces({"application/json"})
-    public List<Product> findByDesignation(@Context HttpHeaders header, @PathParam("designation") String designation) throws ProductNotFoundException {
-        this.log = new Log();
-        try {
-            token = header.getRequestHeaders().getFirst("key");
-            key = Double.parseDouble(token);
-            List<Product> p = productFacade.findProductsByDesignation(designation, key);
-            log.setClientId(clientFacade.checkApiExistence(key));
-            log.setLogDate(today);
-            log.setInvokedService("RestWs");
-            log.setTask("findProductsByDesignation() - Success");
-            log.setParam("Designation - " + designation + " || ApiKey - " + key);
-            logFacade.create(log);
-            return p;
-        } catch (Exception e) {
-            log.setClientId(clientFacade.checkApiExistence(key));
-            log.setLogDate(today);
-            log.setInvokedService("RestWs");
-            log.setTask("findProductsByDesignation() - Failed | Cause : " + e.getMessage());
-            log.setParam("Designation - " + designation + " || ApiKey - " + key);
-            logFacade.create(log);
-            throw new ProductNotFoundException();
-        }
-    }
-
-    @GET
-    @Path("stock/{id}")
+    @Path("{id}/stock")
     @Produces({"text/plain"})
     public int findStockByProduct(@Context HttpHeaders header, @PathParam("id") Long id) throws ProductNotFoundException {
         this.log = new Log();
