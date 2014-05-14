@@ -100,7 +100,7 @@ public class OrderReceivedFacadeREST {
 //        super.remove(super.find(id));
 //    }
     @GET
-    @Path("order/{id}")
+    @Path("{id}")
     @Produces({"application/json"})
     public OrderReceived findOrder(@Context HttpHeaders header, @PathParam("id") Long id) throws ClientNotFoundException, OrderNotFoundException {
         this.log = new Log();
@@ -127,7 +127,6 @@ public class OrderReceivedFacadeREST {
     }
 
     @GET
-    @Path("/find-order-by-client")
     @Produces({"application/json"})
     public List<OrderReceived> findOrderByClienId(@Context HttpHeaders header) throws ClientNotFoundException, OrderNotFoundException {
         this.log = new Log();
@@ -152,33 +151,33 @@ public class OrderReceivedFacadeREST {
             throw new OrderNotFoundException();
         }
     }
-
-    @GET
-    @Path("/find-all-orders")
-    @Produces({"application/json"})
-    public List<OrderReceived> findAllOrders(@Context HttpHeaders header) throws ClientNotFoundException, OrderNotFoundException {
-        this.log = new Log();
-        try {
-            token = header.getRequestHeaders().getFirst("key");
-            key = Double.parseDouble(token);
-            List<OrderReceived> orderList = orderReceivedFacade.findAllOrders(key);
-            log.setClientId(clientFacade.checkApiExistence(key));
-            log.setLogDate(today);
-            log.setInvokedService("RestWs");
-            log.setTask("findAllOrders() - Success");
-            log.setParam("ApiKey - " + key);
-            logFacade.create(log);
-            return orderList;
-        } catch (Exception e) {
-            log.setClientId(clientFacade.checkApiExistence(key));
-            log.setLogDate(today);
-            log.setInvokedService("RestWs");
-            log.setTask("findAllOrders() - Failed | Cause : " + e.getMessage());
-            log.setParam("ApiKey - " + key);
-            logFacade.create(log);
-            throw new OrderNotFoundException();
-        }
-    }
+//
+//    @GET
+//    @Path("/find-all-orders")
+//    @Produces({"application/json"})
+//    public List<OrderReceived> findAllOrders(@Context HttpHeaders header) throws ClientNotFoundException, OrderNotFoundException {
+//        this.log = new Log();
+//        try {
+//            token = header.getRequestHeaders().getFirst("key");
+//            key = Double.parseDouble(token);
+//            List<OrderReceived> orderList = orderReceivedFacade.findAllOrders(key);
+//            log.setClientId(clientFacade.checkApiExistence(key));
+//            log.setLogDate(today);
+//            log.setInvokedService("RestWs");
+//            log.setTask("findAllOrders() - Success");
+//            log.setParam("ApiKey - " + key);
+//            logFacade.create(log);
+//            return orderList;
+//        } catch (Exception e) {
+//            log.setClientId(clientFacade.checkApiExistence(key));
+//            log.setLogDate(today);
+//            log.setInvokedService("RestWs");
+//            log.setTask("findAllOrders() - Failed | Cause : " + e.getMessage());
+//            log.setParam("ApiKey - " + key);
+//            logFacade.create(log);
+//            throw new OrderNotFoundException();
+//        }
+//    }
 
     @GET
     @Path("delivery-date/{id}")
