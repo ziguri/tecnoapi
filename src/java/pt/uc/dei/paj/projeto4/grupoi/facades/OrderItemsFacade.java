@@ -10,7 +10,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
 import pt.uc.dei.paj.projeto4.grupoi.utilities.ClientNotFoundException;
@@ -56,7 +55,7 @@ public class OrderItemsFacade extends AbstractFacade<OrderItems> {
 
     public void deleteItemsFromOrder(Long id) {
 
-        Query q = em.createNamedQuery("OrderItems.deleteItemsFromOrder");
+        TypedQuery<OrderItems> q = em.createNamedQuery("OrderItems.deleteItemsFromOrder", OrderItems.class);
         q.setParameter("id", id);
         q.executeUpdate();
     }

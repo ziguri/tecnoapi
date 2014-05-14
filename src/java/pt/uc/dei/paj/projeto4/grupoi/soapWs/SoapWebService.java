@@ -565,6 +565,7 @@ public class SoapWebService {
      */
     @WebMethod(operationName = "deleteOrderById")
     public String deleteOrderById(@WebParam(name = "orderId") long orderId, @WebParam(name = "apiKey") double apiKey) throws ClientNotFoundException, OrderNotFoundException {
+        log = new Log();
         try {
             orderReceivedFacade.deleteOrder(orderId, apiKey);
             log.setClientId(clientFacade.checkApiExistence(apiKey));
@@ -596,8 +597,8 @@ public class SoapWebService {
      * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException
      */
     @WebMethod(operationName = "editOrder")
-    public String editOrder(@WebParam(name = "newList") List<OrderItems> newList, @WebParam(name = "orderId") long orderId, @WebParam(name = "apiKey") double apiKey) throws OrderNotFoundException {
-
+    public String editOrder(@WebParam(name = "orderId") long orderId, @WebParam(name = "newList") List<OrderItems> newList, @WebParam(name = "apiKey") double apiKey) throws OrderNotFoundException {
+        log = new Log();
         try {
             orderReceivedFacade.editOrder(orderId, newList, apiKey);
             log.setClientId(clientFacade.checkApiExistence(apiKey));

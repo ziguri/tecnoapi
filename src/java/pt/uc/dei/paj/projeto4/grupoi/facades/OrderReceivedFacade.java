@@ -28,19 +28,19 @@ import pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException;
  */
 @Stateless
 public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
-
+    
     @PersistenceContext(unitName = "TecnoApiPU")
     private EntityManager em;
-
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-
+    
     public OrderReceivedFacade() {
         super(OrderReceived.class);
     }
-
+    
     @Inject
     private OrderItemsFacade orderItems;
     @Inject
@@ -54,19 +54,19 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
      * @return OrderReceived
      */
     private OrderReceived orderReceived() {
-
+        
         GregorianCalendar gc = new GregorianCalendar();
-
+        
         String orderDate = "" + gc.get(Calendar.DAY_OF_MONTH) + " / " + gc.get(Calendar.MONTH) + " / " + gc.get(Calendar.YEAR);
         gc.add(Calendar.DAY_OF_MONTH, 7);
         String deliveryDate = "" + gc.get(Calendar.DAY_OF_MONTH) + " / " + gc.get(Calendar.MONTH) + " / " + gc.get(Calendar.YEAR);
         OrderReceived order = new OrderReceived();
-
+        
         order.setOrderDate(orderDate);
         order.setDeliveryDate(deliveryDate);
-
+        
         this.create(order);
-
+        
         return order;
     }
 
@@ -80,14 +80,14 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
      * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotCreatedException
      */
     public String makeOrder(List<Item> items, double key) throws OrderNotCreatedException {
-
+        
         try {
             Client c = clientFacade.getClientByApiKey(key);
             OrderReceived order = orderReceived();
             order.setClient(c);
-
+            
             for (Item i : items) {
-
+                
                 Long productId = i.getProductId();
                 Integer quantity = i.getQuantity();
                 Product p = productFacade.find(productId);
@@ -101,7 +101,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
                 p.setStockQtt(p.getStockQtt() - quantity);
                 productFacade.edit(p);
             }
-
+            
             this.create(order);
             c.getOrders().add(order);
             return "Order Created Successfuly";
@@ -109,9 +109,9 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
             throw new OrderNotCreatedException();
         }
     }
-
+    
     public String makeOrderTest(Long prodId, int quantity) {
-
+        
         try {
             OrderReceived order = orderReceived();
             OrderItems oItems = new OrderItems();
@@ -124,7 +124,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
             orderItems.create(oItems);
             return "Order successfuly added";
         } catch (Exception e) {
-
+            
             return "Exception " + e + " - Unable to fulfill your request.";
         }
     }
@@ -153,7 +153,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
         clientFacade.getClientByApiKey(key);
         return (OrderReceived) this.find(orderId);
     }
-
+    
     public String orderDeliveryDate(Long orderId, double key) throws ClientNotFoundException, OrderNotFoundException {
         clientFacade.getClientByApiKey(key);
         try {
@@ -164,14 +164,14 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
             throw new OrderNotFoundException();
         }
     }
-
+    
     public List<OrderReceived> findOrdersByClientId(double key) throws ClientNotFoundException {
         Client c = clientFacade.getClientByApiKey(key);
-
+        
         Query q = em.createNamedQuery("OrderReceived.findOrdersByClientId");
         q.setParameter("id", c.getId());
         return q.getResultList();
-
+        
     }
 
     /**
@@ -182,7 +182,7 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
      * @throws ClientNotFoundException
      */
     public void deleteOrder(Long orderId, double key) throws ClientNotFoundException {
-
+        
         Client c = clientFacade.getClientByApiKey(key);
         c.getOrders().remove(this.find(orderId));
         orderItems.deleteItemsFromOrder(orderId);
@@ -200,24 +200,25 @@ public class OrderReceivedFacade extends AbstractFacade<OrderReceived> {
     public void editOrder(Long orderId, List<OrderItems> newList, double key) throws ClientNotFoundException {
 ///Palhaço
         clientFacade.getClientByApiKey(key);
-
+        
         orderItems.deleteItemsFromOrder(orderId);
-
+        
         for (OrderItems item : newList) {
-
+            
+            item.setOrderReceivedId(orderId);
             orderItems.create(item);
-
+            
         }
-
+        
     }
 
     //Getter´s and Setter´s
     public OrderItemsFacade getOrderItems() {
         return orderItems;
     }
-
+    
     public void setOrderItems(OrderItemsFacade orderItems) {
         this.orderItems = orderItems;
     }
-
+    
 }
