@@ -15,12 +15,14 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.Log;
+import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderItems;
 import pt.uc.dei.paj.projeto4.grupoi.entidades.OrderReceived;
 import pt.uc.dei.paj.projeto4.grupoi.facades.ClientFacade;
 import pt.uc.dei.paj.projeto4.grupoi.facades.LogFacade;
@@ -86,13 +88,32 @@ public class OrderReceivedFacadeREST {
         }
     }
 
-//    @PUT
-//    @Path("{id}")
-//    @Consumes({"application/xml", "application/json"})
-//    public void edit(@PathParam("id") Long id, OrderReceived entity) {
-//        super.edit(entity);
-//    }
-//
+    @PUT
+    @Path("{id}")
+    @Consumes({"application/xml", "application/json"})
+    public void edit(@Context HttpHeaders header, @PathParam("id") Long id, List<OrderItems> list) throws ClientNotFoundException, OrderNotFoundException {
+        this.log = new Log();
+        try {
+            token = header.getRequestHeaders().getFirst("key");
+            key = Double.parseDouble(token);
+            orderReceivedFacade.editOrder(id, list, key);
+            orderReceivedFacade.deleteOrder(id, key);
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RestWs");
+            log.setTask("editOrder() - Success");
+            log.setParam("orderId - " + id + " || ApiKey - " + key);
+        } catch (Exception e) {
+            log.setClientId(clientFacade.checkApiExistence(key));
+            log.setLogDate(today);
+            log.setInvokedService("RetsWs");
+            log.setTask("deleteOrderById() - Failed");
+            log.setParam("orderId - " + id + " || ApiKey - " + key);
+            logFacade.create(log);
+            throw new OrderNotFoundException();
+        }
+    }
+
     @DELETE
     @Path("{id}")
     public String remove(@Context HttpHeaders header, @PathParam("id") Long id) throws ClientNotFoundException, OrderNotFoundException {
