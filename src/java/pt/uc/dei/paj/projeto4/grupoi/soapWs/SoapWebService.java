@@ -588,19 +588,24 @@ public class SoapWebService {
 
     /**
      * Web service operation
+     *
+     * @param newList
+     * @param orderId
+     * @param apiKey
+     * @return
+     * @throws pt.uc.dei.paj.projeto4.grupoi.utilities.OrderNotFoundException
      */
     @WebMethod(operationName = "editOrder")
-    public List<OrderItems> editOrder(@WebParam(name = "newList") List<OrderItems> newList, @WebParam(name = "orderId") long orderId, @WebParam(name = "apiKey") double apiKey) throws OrderNotFoundException {
+    public String editOrder(@WebParam(name = "newList") List<OrderItems> newList, @WebParam(name = "orderId") long orderId, @WebParam(name = "apiKey") double apiKey) throws OrderNotFoundException {
 
         try {
-            List<OrderItems> result = orderReceivedFacade.editOrder(orderId, newList, apiKey);
-            orderReceivedFacade.deleteOrder(orderId, apiKey);
+            orderReceivedFacade.editOrder(orderId, newList, apiKey);
             log.setClientId(clientFacade.checkApiExistence(apiKey));
             log.setLogDate(today);
             log.setInvokedService("SoapWs");
             log.setTask("editOrder() - Success");
             log.setParam("orderId - " + orderId + " || ApiKey - " + apiKey);
-            return result;
+            return "Edited";
         } catch (Exception e) {
             log.setClientId(clientFacade.checkApiExistence(apiKey));
             log.setLogDate(today);
